@@ -6,13 +6,59 @@
     <h1>Инвентарь с покупками</h1>
 
 </div>
+
+<!-- Button trigger modal -->
 <div class="d-flex justify-content-center py-3">
-    <button onclick="window.location='{% url 'create' %}'" class="btn btn-success">Create</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create
+    </button>
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center py-3">
+                    <form id="form_create" method="post">
+                        {% csrf_token %}
+                        <h7>Имя</h7>
+                        <br>
+                        {{ form.title }}<br>
+                        <h7>Размер</h7>
+                        <br>
+                        {{ form.size }}<br>
+                        {{ form.price }}<br>
+                        {{ form.sellprice }}<br>
+                        {{ form.anyprice }}<br>
+                        <h7>Дата покупки</h7>
+                        <br>
+                        {{ form.datebuy }}<br>
+                        <h7>Дата продажи</h7>
+                        <br>
+                        {{ form.datesell }}<br>
+                        {{ form.notes}}<br>
 
-<table id="myTable" class="table" >
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="form_create" class="btn btn-primary">Create</button>
+                <span>{{ error }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<table id="myTable" class="table">
     <tr>
         <th onclick="sortTable(0)">Название</th>
         <th>Size</th>
@@ -103,6 +149,9 @@ function sortTable(n) {
     }
   }
 }
+
+
+
 </script>
 
 
