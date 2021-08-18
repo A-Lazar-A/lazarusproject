@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+
+
+
+{% block content %}
+<div class="d-flex justify-content-center py-3">
+    <h1>Create the sneaker</h1>
+</div>
+
+
+
+
+
+
+<div class="d-flex justify-content-center py-3">
+    <form method="post" >
+        {% csrf_token %}
+        <h7>Имя</h7><br>
+        {{ form.title }}<br>
+        <h7>Размер</h7><br>
+        {{ form.size }}<br>
+        {{ form.price }}<br>
+        {{ form.sellprice }}<br>
+        {{ form.anyprice }}<br>
+        <h7>Дата покупки</h7><br>
+        {{ form.datebuy }}<br>
+        <h7>Дата продажи</h7><br>
+        {{ form.datesell }}<br>
+        {{ form.notes}}<br>
+
+        <button type="submit" class="btn btn-success">Create</button>
+        <span>{{ error }}</span>
+    </form>
+</div>
+
+{% endblock %}
