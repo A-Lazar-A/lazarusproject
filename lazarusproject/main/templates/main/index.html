@@ -13,7 +13,50 @@
     </button>
 </div>
 
-{% include 'main/modalform.html' %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center py-3">
+                    <form id="form_create" method="post">
+                        {% csrf_token %}
+                        <h7>Имя</h7>
+                        <br>
+                        {{ form.title }}<br>
+                        <h7>Размер</h7>
+                        <br>
+                        {{ form.size }}<br>
+                        <h7>Цена покупки</h7>
+                        <br>
+                        {{ form.price }}<br>
+                        <h7>Цена продажи</h7>
+                        <br>
+                        {{ form.sellprice }}<br>
+                        <h7>Доп расходы</h7>
+                        <br>
+                        {{ form.anyprice }}<br>
+                        <h7>Дата покупки</h7>
+                        <br>
+                        {{ form.datebuy }}<br>
+                        <h7>Дата продажи</h7>
+                        <br>
+                        {{ form.datesell }}<br>
+                        {{ form.notes}}<br>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="form_create" class="btn btn-primary">Create</button>
+                <span>{{ error }}</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <table id="myTable" class="table">
@@ -43,7 +86,7 @@
             <td>{{ el.notes }}</td>
             <td>{{ el.value }}</td>
             <td>
-                <a class="btn btn-light btn-sm" data-bs-toggle="modal"
+                <a href="{% url 'item-edit' el.id %}" class="btn btn-light btn-sm" data-bs-toggle="modal"
                    data-bs-target="#editModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
                          class="bi bi-pencil" viewBox="0 0 16 16">
@@ -61,7 +104,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="d-flex justify-content-center py-3">
-                                    <form id="form_edit"  name="edit" method="post">
+                                    <form id="form_edit" name="edit" method="post">
                                         {% csrf_token %}
                                         <h7>Имя</h7>
                                         <br>
@@ -90,7 +133,10 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" href="{% url 'item-edit' el.id %}" form="form_edit" value="edit" class="btn btn-primary">Edit</button>
+                                <button type="submit" href="{% url 'item-edit' el.id %}" form="form_edit" value="edit"
+                                        class="btn btn-primary">
+                                    Edit
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -98,7 +144,8 @@
 
             </td>
             <td>
-                <a href="{% url 'item-delete' el.id %}" class="btn btn-sm">
+                <form action="{% url 'item-delete' el.id %}" id="delete_form" method="post">{% csrf_token %}</form>
+                <a href="javascript:void()" onclick="delete_item()" class="btn btn-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -106,6 +153,14 @@
                               d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                     </svg>
                 </a>
+                <script>
+                    function delete_item() {
+                        if (confirm("Вы уверены?")) {
+                            document.getElementById('delete_form').submit()
+                        }
+                    }
+
+                </script>
             </td>
         </tr>
         <br>
@@ -169,6 +224,10 @@ function sortTable(n) {
     }
   }
 }
+
+
+
+
 
 
 

@@ -40,7 +40,7 @@ class Table(models.Model):
     sellprice = models.FloatField(blank=True, null=True, default=0)
     anyprice = models.FloatField(blank=True, null=True, default=0)
     value = models.FloatField(blank=True, null=True, editable=False, )
-    size = models.CharField('Size', max_length=5, choices=US_SIZES, default='')
+    size = models.CharField('Size', max_length=5, choices=US_SIZES, default='NO SIZE')
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 
     def __str__(self):
