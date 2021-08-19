@@ -46,6 +46,9 @@ class Table(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return '/inventory'
+
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
