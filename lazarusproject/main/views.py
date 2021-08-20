@@ -92,5 +92,6 @@ class UserLogoutView(LogoutView):
     next_page = reverse_lazy('inventory')
 
 
+
 def statistic(request):
     return render(request, 'main/statistic.html')
