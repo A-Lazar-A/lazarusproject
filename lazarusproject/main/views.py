@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import Table
-from .forms import TableForm
+from .forms import TableForm, AuthUserForm, SignUpForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView, UpdateView, CreateView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 
 # def inventory(request):
@@ -50,17 +53,34 @@ class ItemUpdateView(UpdateView):
     success_url = reverse_lazy('inventory')
 
 
-# def item_edit(request, pk):
-#     get_item = Table.objects.get(pk=pk)
-#     context ={
-#         'get_item': get_item,
-#         'form': TableForm(instance=get_item)
-#     }
-#     return render(request, 'main/index.html', context)
+class UserLoginView(LoginView):
+    model = User
+    template_name = 'main/login.html'
+    form_class = AuthUserForm
+    success_url = reverse_lazy('inventory')
+
+    def get_success_url(self):
+        return self.success_url
 
 
-def login(request):
-    return render(request, 'main/login.html')
+class UserRegisterView(CreateView):
+    model = User
+    template_name = 'main/sing-up.html'
+    form_class = SignUpForm
+    success_url = reverse_lazy('inventory')
+
+    # тк пароль не хешируется это не работает....
+    # def form_valid(self, form):
+    #     form_valid = super().form_valid(form)
+    #     username = form.cleaned_data["username"]
+    #     password = form.cleaned_data["password"]
+    #     auth_user = authenticate(username=username, password=password)
+    #     login(self.request, auth_user)
+    #     return form_valid
+
+
+class UserLogoutView(LogoutView):
+    next_page = reverse_lazy('inventory')
 
 
 def statistic(request):

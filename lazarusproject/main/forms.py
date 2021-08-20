@@ -2,6 +2,7 @@ from .models import Table, US_SIZES
 from django import forms
 from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
 
 class TableForm(ModelForm):
@@ -47,14 +48,14 @@ class TableForm(ModelForm):
         }
 
 
-class LoginForm(ModelForm):
+class SignUpForm(ModelForm):
     class Meta:
         model = User
         fields = ["username", "password"]
         widgets = {
-            "username": PasswordInput(attrs={
+            "username": TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Login'
+                'placeholder': 'NickName'
             }),
             "password": PasswordInput(attrs={
                 'class': 'form-control',
@@ -62,15 +63,22 @@ class LoginForm(ModelForm):
             })
         }
 
-    def clean(self):
-        usermane = self.cleaned_data['username']
-        password = self.cleaned_data['password']
-        if not User.objects.filter(usermane=usermane).exists():
-            raise forms.ValidationError(f'Пользователь с логином {usermane} не найден')
-        user = User.objects.filter(usermane=usermane).first()
-        if user:
-            if not user.check_password(password):
-                raise forms.ValidationError("Неверный пароль")
-        return self.cleaned_data
+        def save(self, commit=True):
+            user = super().save(commit=False)
+            user.set_password(self.cleaned_data["password"])
+            if commit:
+                user.save()
+            return user
+
+
+class AuthUserForm(AuthenticationForm, ModelForm):
+    class Meta:
+        model = User
+        fields = ["username", "password"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
 
 

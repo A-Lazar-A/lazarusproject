@@ -1,19 +1,19 @@
 {% extends 'main/base.html' %}
 
 
-
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-4 ">
-        <h1>Login</h1>
-        <form id="login" method="post">
+        <h1>Sign Up</h1>
+        <form id="sing-up" method="post">
             {% csrf_token %}
             {{ form }}
-            <button type="submit" class="btn btn-primary mt-4">Вход</button>
+            <button type="submit" class="btn btn-primary mt-4">Регистрация</button>
         </form>
 
     </div>
 </div>
 
-{% endblock %}
 
+{% endblock %}
