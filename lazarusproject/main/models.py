@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -33,6 +34,7 @@ US_SIZES = (
 
 
 class Table(models.Model):
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
     title = models.CharField('Name', max_length=100)
     datebuy = models.DateField(null=True)
     datesell = models.DateField(blank=True, null=True)

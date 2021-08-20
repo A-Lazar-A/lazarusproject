@@ -2,13 +2,13 @@ from .models import Table, US_SIZES
 from django import forms
 from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class TableForm(ModelForm):
     class Meta:
         model = Table
-        fields = ["title", "size", "price", "sellprice", "anyprice", "datebuy", "datesell", "notes"]
+        fields = ["userID", "title", "size", "price", "sellprice", "anyprice", "datebuy", "datesell", "notes"]
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',
@@ -63,12 +63,12 @@ class SignUpForm(ModelForm):
             })
         }
 
-        def save(self, commit=True):
-            user = super().save(commit=False)
-            user.set_password(self.cleaned_data["password"])
-            if commit:
-                user.save()
-            return user
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 
 class AuthUserForm(AuthenticationForm, ModelForm):

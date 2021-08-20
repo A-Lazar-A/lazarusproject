@@ -74,8 +74,8 @@
             <td>{{ el.price }}</td>
             <td>{{ el.sellprice }}</td>
             <td>{{ el.anyprice }}</td>
-            <td>{{ el.datebuy }}</td>
-            <td>{{ el.datesell }}</td>
+            <td>{{ el.datebuy|date:'d.m.Y' }}</td>
+            <td>{{ el.datesell|date:'d.m.Y' }}</td>
             <td>{{ el.notes }}</td>
             <td>{{ el.value }}</td>
             <td>
