@@ -2,8 +2,19 @@
 
 
 {% block content %}
-<div class="d-flex justify-content-center py-3">
-    <h1>Инвентарь с покупками</h1>
+
+<div class="row justify-content-end">
+    <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
+<div class="col-3 ">
+    <figure class="text-center"><h4>Прибыль за все время</h4></figure>
+    {% if sum >= 0 %}
+            <figure class="text-center text-success"><h4>{{ sum }}</h4></figure>
+            {% else %}
+            <figure class="text-center text-danger"><h4>{{ sum }}</h4></figure>
+            {% endif %}
+
+    </div>
+
 </div>
 
 <!-- Button trigger modal -->
@@ -58,23 +69,26 @@
     </div>
 </div>
 
-
 <table id="myTable" class="table">
-    <tr>
-        <th onclick="sortTable(0)">Название</th>
-        <th>Size</th>
-        <th onclick="sortTable(1)">Цена покупки</th>
-        <th onclick="sortTable(2)">Цена продажи</th>
-        <th>Доп расходы</th>
-        <th onclick="sortTable(3)">Дата покупки</th>
-        <th onclick="sortTable(4)">Дата продажи</th>
-        <th>Заметки</th>
-        <th onclick="sortTable(5)">Прибыль</th>
-    </tr>
-
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">Название</th>
+            <th>Size</th>
+            <th onclick="sortTable(1)">Цена покупки</th>
+            <th onclick="sortTable(2)">Цена продажи</th>
+            <th>Доп расходы</th>
+            <th onclick="sortTable(3)">Дата покупки</th>
+            <th onclick="sortTable(4)">Дата продажи</th>
+            <th>Заметки</th>
+            <th onclick="sortTable(5)">Прибыль</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
     {% for el in table %}
-    <div class="d-flex justify-content-center">
-        {% if request.user == el.userID %}
+
+    {% if request.user == el.userID %}
+    <tbody>
         <tr>
             <td>{{ el.title }} - {{ el.userID }}</td>
             <td>{{ el.size }}</td>
@@ -84,7 +98,11 @@
             <td>{{ el.datebuy|date:'d.m.Y' }}</td>
             <td>{{ el.datesell|date:'d.m.Y' }}</td>
             <td>{{ el.notes }}</td>
-            <td>{{ el.value }}</td>
+            {% if el.value >= 0 %}
+            <td class="table-success">{{ el.value }}</td>
+            {% else %}
+            <td class="table-danger">{{ el.value }}</td>
+            {% endif %}
             <td>
                 <a href="{% url 'item-edit' el.id %}" class="btn btn-light btn-sm" data-bs-toggle="modal"
                    data-bs-target="#editModal">
@@ -155,18 +173,18 @@
                     </svg>
                 </a>
                 <script>
-                    function delete_item(x) {
+                        function delete_item(x) {
 
-                        document.getElementById('delete_form'+x).submit()
+                            document.getElementById('delete_form'+x).submit()
 
-                    }
+                        }
+
 
                 </script>
             </td>
         </tr>
-        {% endif %}
-        <br>
-    </div>
+    </tbody>
+    {% endif %}
     {% endfor %}
 </table>
 
@@ -226,6 +244,7 @@ function sortTable(n) {
     }
   }
 }
+
 
 
 

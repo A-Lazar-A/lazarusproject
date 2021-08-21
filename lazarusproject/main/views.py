@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.db.models import Sum
 
 
 # def inventory(request):
@@ -46,13 +47,10 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
+        dic_sum = Table.objects.filter(userID=self.request.user).aggregate(Sum('value'))
+        kwargs['sum'] = dic_sum['value__sum']
         kwargs['table'] = Table.objects.order_by('-id')
         return super().get_context_data(**kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        print(kwargs)
-        return kwargs
 
 
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
