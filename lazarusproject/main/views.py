@@ -41,6 +41,7 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.userID = self.request.user
+        self.object.value = self.object.sellprice - self.object.price
         self.object.save()
         return super().form_valid(form)
 

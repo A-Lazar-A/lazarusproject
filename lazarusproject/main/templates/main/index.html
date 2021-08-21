@@ -25,25 +25,25 @@
                     <form id="form_create" method="post">
                         {% csrf_token %}
                         <h6>Имя</h6>
-                        <br>
+
                         {{ form.title }}<br>
                         <h6>Размер</h6>
-                        <br>
+
                         {{ form.size }}<br>
                         <h6>Цена покупки</h6>
-                        <br>
+
                         {{ form.price }}<br>
                         <h6>Цена продажи</h6>
-                        <br>
+
                         {{ form.sellprice }}<br>
                         <h6>Доп расходы</h6>
-                        <br>
+
                         {{ form.anyprice }}<br>
                         <h6>Дата покупки</h6>
-                        <br>
+
                         {{ form.datebuy }}<br>
                         <h6>Дата продажи</h6>
-                        <br>
+
                         {{ form.datesell }}<br>
                         {{ form.notes}}<br>
                     </form>
