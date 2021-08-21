@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 
 
 # def inventory(request):
@@ -47,12 +48,25 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         kwargs['table'] = Table.objects.order_by('-id')
         return super().get_context_data(**kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        print(kwargs)
+        return kwargs
+
 
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
     login_url = 'login'
     model = Table
     template_name = 'main/index.html'
     success_url = reverse_lazy('inventory')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user != self.object.userID:
+            return self.handle_no_permission()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
@@ -90,7 +104,6 @@ class UserRegisterView(CreateView):
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('inventory')
-
 
 
 def statistic(request):
