@@ -75,6 +75,13 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
     form_class = TableForm
     success_url = reverse_lazy('inventory')
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.userID = self.request.user
+        self.object.value = self.object.sellprice - self.object.price
+        self.object.save()
+        return super().form_valid(form)
+
 
 class UserLoginView(LoginView):
     model = User

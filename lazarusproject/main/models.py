@@ -49,7 +49,7 @@ class Table(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return '/inventory'
+        return '/inventory/'
 
     class Meta:
         verbose_name = 'Item'

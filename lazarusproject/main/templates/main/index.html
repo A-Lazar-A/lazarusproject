@@ -5,13 +5,13 @@
 
 <div class="row justify-content-end">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
-<div class="col-3 ">
-    <figure class="text-center"><h4>Прибыль за все время</h4></figure>
-    {% if sum >= 0 %}
-            <figure class="text-center text-success"><h4>{{ sum }}</h4></figure>
-            {% else %}
-            <figure class="text-center text-danger"><h4>{{ sum }}</h4></figure>
-            {% endif %}
+    <div class="col-3 ">
+        <figure class="text-center"><h4>Прибыль за все время</h4></figure>
+        {% if sum >= 0 %}
+        <figure class="text-center text-success"><h4>{{ sum }}</h4></figure>
+        {% else %}
+        <figure class="text-center text-danger"><h4>{{ sum }}</h4></figure>
+        {% endif %}
 
     </div>
 
@@ -71,108 +71,101 @@
 
 <table id="myTable" class="table">
     <thead>
-        <tr>
-            <th onclick="sortTable(0)">Название</th>
-            <th>Size</th>
-            <th onclick="sortTable(1)">Цена покупки</th>
-            <th onclick="sortTable(2)">Цена продажи</th>
-            <th>Доп расходы</th>
-            <th onclick="sortTable(3)">Дата покупки</th>
-            <th onclick="sortTable(4)">Дата продажи</th>
-            <th>Заметки</th>
-            <th onclick="sortTable(5)">Прибыль</th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th onclick="sortTable(0)">Название</th>
+        <th>Size</th>
+        <th onclick="sortTable(1)">Цена покупки</th>
+        <th onclick="sortTable(2)">Цена продажи</th>
+        <th>Доп расходы</th>
+        <th onclick="sortTable(3)">Дата покупки</th>
+        <th onclick="sortTable(4)">Дата продажи</th>
+        <th>Заметки</th>
+        <th onclick="sortTable(5)">Прибыль</th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     {% for el in table %}
 
     {% if request.user == el.userID %}
     <tbody>
-        <tr>
-            <td>{{ el.title }} - {{ el.userID }}</td>
-            <td>{{ el.size }}</td>
-            <td>{{ el.price }}</td>
-            <td>{{ el.sellprice }}</td>
-            <td>{{ el.anyprice }}</td>
-            <td>{{ el.datebuy|date:'d.m.Y' }}</td>
-            <td>{{ el.datesell|date:'d.m.Y' }}</td>
-            <td>{{ el.notes }}</td>
-            {% if el.value >= 0 %}
-            <td class="table-success">{{ el.value }}</td>
-            {% else %}
-            <td class="table-danger">{{ el.value }}</td>
-            {% endif %}
-            <td>
-                <a href="{% url 'item-edit' el.id %}" class="btn btn-light btn-sm" data-bs-toggle="modal"
-                   data-bs-target="#editModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                         class="bi bi-pencil" viewBox="0 0 16 16">
-                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
-                    </svg>
-                </a>
-                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Edit</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+    <tr>
+        <td>{{ el.title }} - {{ el.userID }}</td>
+        <td>{{ el.size }}</td>
+        <td>{{ el.price }}</td>
+        <td>{{ el.sellprice }}</td>
+        <td>{{ el.anyprice }}</td>
+        <td>{{ el.datebuy|date:'d.m.Y' }}</td>
+        <td>{{ el.datesell|date:'d.m.Y' }}</td>
+        <td>{{ el.notes }}</td>
+        {% if el.value >= 0 %}
+        <td class="table-success">{{ el.value }}</td>
+        {% else %}
+        <td class="table-danger">{{ el.value }}</td>
+        {% endif %}
+        <td>
+            <a href="{% url 'item-edit' el.id %}" class="btn btn-light btn-sm" data-bs-toggle="modal"
+               data-bs-target="#editModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                     class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                </svg>
+            </a>
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Edit</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-center py-3">
+                                <form id="form_edit"  action="{% url 'item-edit' el.id %}" name="edit" method="post">
+                                    {% csrf_token %}
+                                    <h6>Имя</h6>
+                                    {{ form.title }}<br>
+                                    <h6>Размер</h6>
+                                    {{ form.size }}<br>
+                                    <h6>Цена покупки</h6>
+                                    {{ form.price }}<br>
+                                    <h6>Цена продажи</h6>
+                                    {{ form.sellprice }}<br>
+                                    <h6>Доп расходы</h6>
+                                    {{ form.anyprice }}<br>
+                                    <h6>Дата покупки</h6>
+                                    {{ form.datebuy }}<br>
+                                    <h6>Дата продажи</h6>
+                                    {{ form.datesell }}<br>
+                                    {{ form.notes}}<br>
+                                </form>
                             </div>
-                            <div class="modal-body">
-                                <div class="d-flex justify-content-center py-3">
-                                    <form id="form_edit" name="edit" method="post">
-                                        {% csrf_token %}
-                                        <h6>Имя</h6>
-                                        <br>
-                                        {{ form.title }}<br>
-                                        <h6>Размер</h6>
-                                        <br>
-                                        {{ form.size }}<br>
-                                        <h6>Цена покупки</h6>
-                                        <br>
-                                        {{ form.price }}<br>
-                                        <h6>Цена продажи</h6>
-                                        <br>
-                                        {{ form.sellprice }}<br>
-                                        <h6>Доп расходы</h6>
-                                        <br>
-                                        {{ form.anyprice }}<br>
-                                        <h6>Дата покупки</h6>
-                                        <br>
-                                        {{ form.datebuy }}<br>
-                                        <h6>Дата продажи</h6>
-                                        <br>
-                                        {{ form.datesell }}<br>
-                                        {{ form.notes}}<br>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" href="{% url 'item-edit' el.id %}" form="form_edit" value="edit"
-                                        class="btn btn-primary">
-                                    Edit
-                                </button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" form="form_edit" value="edit"
+                                    class="btn btn-primary">
+                                Edit
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </td>
-            <td>
-                <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token %}
-                </form>
-                <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-trash" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd"
-                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </a>
-                <script>
+        </td>
+        <td>
+            <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token %}
+            </form>
+            <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd"
+                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </a>
+            <script>
                         function delete_item(x) {
 
                             document.getElementById('delete_form'+x).submit()
@@ -180,9 +173,10 @@
                         }
 
 
-                </script>
-            </td>
-        </tr>
+
+            </script>
+        </td>
+    </tr>
     </tbody>
     {% endif %}
     {% endfor %}
@@ -244,6 +238,7 @@ function sortTable(n) {
     }
   }
 }
+
 
 
 
