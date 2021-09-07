@@ -14,7 +14,7 @@ class TableForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Model Name'
             }),
-            "size": Select(choices=US_SIZES, attrs={
+            "size": Select(choices=US_SIZES,  attrs={
                 'class': 'form-select',
                 'aria-label': '.form-select-lg example',
                 'placeholder': 'Model Size'

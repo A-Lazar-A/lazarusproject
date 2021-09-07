@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
+from datetime import timedelta
+from django.utils import timezone
 
 
 # def inventory(request):
@@ -47,7 +49,36 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
+        last_year = timezone.now().date() - timedelta(days=365)
+        last_month = timezone.now().date() - timedelta(days=30)
+        some_day_last_week = timezone.now().date() - timedelta(days=7)
+        year_sum = Table.objects.filter(datesell__gte=last_year, userID=self.request.user).aggregate(Sum('sellprice'))
+        if year_sum['sellprice__sum'] is None:
+            year_sum['sellprice__sum'] = 0
+        week_sum = Table.objects.filter(datesell__gte=some_day_last_week, userID=self.request.user).aggregate(
+            Sum('sellprice'))
+        if week_sum['sellprice__sum'] is None:
+            week_sum['sellprice__sum'] = 0
+        month_sum = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).aggregate(Sum('sellprice'))
+        if month_sum['sellprice__sum'] is None:
+            month_sum['sellprice__sum'] = 0
+        year_sum_b = Table.objects.filter(datebuy__gte=last_year, userID=self.request.user).aggregate(Sum('price'))
+        if year_sum_b['price__sum'] is None:
+            year_sum_b['price__sum'] = 0
+        week_sum_b = Table.objects.filter(datebuy__gte=some_day_last_week, userID=self.request.user).aggregate(
+            Sum('price'))
+        if week_sum_b['price__sum'] is None:
+            week_sum_b['price__sum'] = 0
+        month_sum_b = Table.objects.filter(datebuy__gte=last_month, userID=self.request.user).aggregate(Sum('price'))
+        if month_sum_b['price__sum'] is None:
+            month_sum_b['price__sum'] = 0
+        year_value = year_sum['sellprice__sum'] - year_sum_b['price__sum']
+        month_value = month_sum['sellprice__sum'] - month_sum_b['price__sum']
+        week_value = week_sum['sellprice__sum'] - week_sum_b['price__sum']
         dic_sum = Table.objects.filter(userID=self.request.user).aggregate(Sum('value'))
+        kwargs['year_value'] = year_value
+        kwargs['month_value'] = month_value
+        kwargs['week_value'] = week_value
         kwargs['sum'] = dic_sum['value__sum']
         kwargs['table'] = Table.objects.order_by('-id')
         return super().get_context_data(**kwargs)

@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 # Create your models here.
 
 US_SIZES = (
-    ('0', 'NO SIZE'),
+    ('NO SIZE', 'NO SIZE'),
     ('3', '3 US'),
     ('3.5', '3.5 US'),
     ('4', '4 US'),
@@ -39,10 +40,10 @@ class Table(models.Model):
     datebuy = models.DateField(null=True)
     datesell = models.DateField(blank=True, null=True)
     price = models.DecimalField(max_digits=19, decimal_places=2)
-    sellprice = models.DecimalField(blank=True, null=True, default=0, max_digits=19, decimal_places=2)
-    anyprice = models.DecimalField(blank=True, null=True, default=0,max_digits=19, decimal_places=2)
+    sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
+    anyprice = models.DecimalField(blank=False, null=False, default=0,max_digits=19, decimal_places=2)
     value = models.DecimalField(blank=True, null=True, editable=False, max_digits=19, decimal_places=2)
-    size = models.CharField('Size', max_length=5, choices=US_SIZES, default='NO SIZE')
+    size = models.CharField('Size', max_length=10, choices=US_SIZES)
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 
     def __str__(self):

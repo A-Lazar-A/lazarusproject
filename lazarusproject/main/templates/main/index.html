@@ -6,6 +6,34 @@
 <div class="row justify-content-end">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
     <div class="col-3 ">
+        <figure class="text-center"><h4>Прибыль за неделю</h4></figure>
+        {% if week_value >= 0 %}
+        <figure class="text-center text-success"><h4>{{ week_value }}</h4></figure>
+        {% else %}
+        <figure class="text-center text-danger"><h4>{{ week_value }}</h4></figure>
+        {% endif %}
+
+    </div>
+    <div class="col-3 ">
+        <figure class="text-center"><h4>Прибыль за месяц</h4></figure>
+        {% if month_value >= 0 %}
+        <figure class="text-center text-success"><h4>{{ month_value }}</h4></figure>
+        {% else %}
+        <figure class="text-center text-danger"><h4>{{ month_value }}</h4></figure>
+        {% endif %}
+
+    </div>
+    <div class="col-3 ">
+        <figure class="text-center"><h4>Прибыль за год</h4></figure>
+        {% if year_value >= 0 %}
+        <figure class="text-center text-success"><h4>{{ year_value }}</h4></figure>
+        {% else %}
+        <figure class="text-center text-danger"><h4>{{ year_value }}</h4></figure>
+        {% endif %}
+
+    </div>
+
+    <div class="col-3 ">
         <figure class="text-center"><h4>Прибыль за все время</h4></figure>
         {% if sum >= 0 %}
         <figure class="text-center text-success"><h4>{{ sum }}</h4></figure>
@@ -14,6 +42,7 @@
         {% endif %}
 
     </div>
+
 
 </div>
 
@@ -42,14 +71,25 @@
 
                         {{ form.size }}<br>
                         <h6>Цена покупки</h6>
-
-                        {{ form.price }}<br>
+                        <div class="input-group">
+                            <div class="input-group-text">₽</div>
+                            {{ form.price }}
+                        </div>
+                        <br>
                         <h6>Цена продажи</h6>
 
-                        {{ form.sellprice }}<br>
+                        <div class="input-group">
+                            <div class="input-group-text">₽</div>
+                            {{ form.sellprice }}
+                        </div>
+                        <br>
                         <h6>Доп расходы</h6>
 
-                        {{ form.anyprice }}<br>
+                        <div class="input-group">
+                            <div class="input-group-text">₽</div>
+                            {{ form.anyprice }}
+                        </div>
+                        <br>
                         <h6>Дата покупки</h6>
 
                         {{ form.datebuy }}<br>
@@ -122,7 +162,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="d-flex justify-content-center py-3">
-                                <form id="form_edit"  action="{% url 'item-edit' el.id %}" name="edit" method="post">
+                                <form id="form_edit" action="{% url 'item-edit' el.id %}" name="edit" method="post">
                                     {% csrf_token %}
                                     <h6>Имя</h6>
                                     {{ form.title }}<br>
@@ -171,6 +211,7 @@
                             document.getElementById('delete_form'+x).submit()
 
                         }
+
 
 
 
@@ -238,6 +279,7 @@ function sortTable(n) {
     }
   }
 }
+
 
 
 
