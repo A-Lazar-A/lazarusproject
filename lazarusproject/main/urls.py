@@ -6,8 +6,9 @@ urlpatterns = [
     path('login', views.UserLoginView.as_view(), name='login'),
     path('logout', views.UserLogoutView.as_view(), name='logout'),
     path('sign-up', views.UserRegisterView.as_view(), name='sign-up'),
-    # path('', views.inventory, name='home'),
+    path('', views.UserLoginView.as_view(), name='home'),
     path('statistic', views.statistic, name='statistic'),
     path('delete/<int:pk>', views.ItemDeleteView.as_view(), name='item-delete'),
-    path('edit/<int:pk>', views.ItemUpdateView.as_view(), name='item-edit')
+    path('edit/<int:pk>', views.ItemUpdateView.as_view(), name='item-edit'),
+    path('delivery', views.DeliveryView.as_view(), name='delivery')
 ]

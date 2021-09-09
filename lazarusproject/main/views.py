@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Table
 from .forms import TableForm, AuthUserForm, SignUpForm
 from django.urls import reverse, reverse_lazy
-from django.views.generic import DeleteView, UpdateView, CreateView
+from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -115,6 +115,7 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class UserLoginView(LoginView):
+    redirect_authenticated_user = 'inventory'
     model = User
     template_name = 'main/login.html'
     form_class = AuthUserForm
@@ -142,6 +143,9 @@ class UserRegisterView(CreateView):
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('inventory')
 
+
+class DeliveryView(TemplateView):
+    template_name = 'main/delivery.html'
 
 def statistic(request):
     return render(request, 'main/statistic.html')

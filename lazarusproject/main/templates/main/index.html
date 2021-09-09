@@ -108,8 +108,8 @@
         </div>
     </div>
 </div>
-
-<table id="myTable" class="table">
+<div class="container">
+<table id="myTable" class="table table-bordered border-dark ">
     <thead>
     <tr>
         <th onclick="sortTable(0)">Название</th>
@@ -139,11 +139,11 @@
         <td>{{ el.datesell|date:'d.m.Y' }}</td>
         <td>{{ el.notes }}</td>
         {% if el.value >= 0 %}
-        <td class="table-success">{{ el.value }}</td>
+        <td class="table-success border-dark">{{ el.value }}</td>
         {% else %}
-        <td class="table-danger">{{ el.value }}</td>
+        <td class="table-danger border-dark">{{ el.value }}</td>
         {% endif %}
-        <td>
+        <td align="center">
             <a href="{% url 'item-edit' el.id %}" class="btn btn-light btn-sm" data-bs-toggle="modal"
                data-bs-target="#editModal">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
@@ -194,7 +194,7 @@
             </div>
 
         </td>
-        <td>
+        <td align="center">
             <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token %}
             </form>
             <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
@@ -222,7 +222,7 @@
     {% endif %}
     {% endfor %}
 </table>
-
+</div>
 
 <script>
 function sortTable(n) {
@@ -279,17 +279,6 @@ function sortTable(n) {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 

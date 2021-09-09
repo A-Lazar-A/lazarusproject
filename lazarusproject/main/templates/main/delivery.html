@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+<script type="text/javascript" language="javascript" src="https://api.track24.ru/track24widget.js?v=1.74"></script>
+<script type="text/javascript">
+ var track24Options = {
+ 'apiKey' : '7190907c1a1db0e8d304a21850d4ffc0',
+ 'widgetId' : 'track24widget',
+ 'domain' : '127.0.0.1:8000/',
+ 'inputId' : 'track24Input',
+ 'buttonId' : 'track24Button',
+ 'resultId' : 'track24Result',
+ 'useCss' : true,
+ 'validate' : true,
+ 'language' : 'ru',
+ 'restoreLastTrackingNumber' : false
+ };
+
+</script>
+<div class="container"><p class="fs-1">Тут можно отследить свои посылки</p></div>
+
+<div id="track24widget" class="container"></div>
+{% endblock %}
