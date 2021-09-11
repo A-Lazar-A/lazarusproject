@@ -10,5 +10,6 @@ urlpatterns = [
     path('statistic', views.statistic, name='statistic'),
     path('delete/<int:pk>', views.ItemDeleteView.as_view(), name='item-delete'),
     path('edit/<int:pk>', views.ItemUpdateView.as_view(), name='item-edit'),
+    path('meeting-create/<int:pk>', views.MeetingCreateView.as_view(), name='meeting-create'),
     path('delivery', views.DeliveryView.as_view(), name='delivery')
 ]

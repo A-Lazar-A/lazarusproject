@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Table
-from .forms import TableForm, AuthUserForm, SignUpForm
+from .models import Table, Meetings
+from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
@@ -146,6 +146,20 @@ class UserLogoutView(LogoutView):
 
 class DeliveryView(TemplateView):
     template_name = 'main/delivery.html'
+
+
+class MeetingCreateView(CreateView):
+    model = Meetings
+    template_name = 'main/index.html'
+    form_class = MeetingForm
+    success_url = reverse_lazy('meetings')
+
+    def form_valid(self, form1):
+        self.object = form1.save(commit=False)
+        self.object.userID = self.request.user
+        self.object.save()
+        return super().form_valid(form1)
+
 
 def statistic(request):
     return render(request, 'main/statistic.html')

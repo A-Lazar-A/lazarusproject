@@ -1,4 +1,4 @@
-from .models import Table, US_SIZES
+from .models import Table, US_SIZES, Meetings
 from django import forms
 from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput
 from django.contrib.auth.models import User
@@ -6,6 +6,10 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class TableForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["size"].empty_label = 'Выбрать размер'
+
     class Meta:
         model = Table
         fields = ["userID", "title", "size", "price", "sellprice", "anyprice", "datebuy", "datesell", "notes"]
@@ -39,6 +43,31 @@ class TableForm(ModelForm):
             "datesell": DateInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Дата продажи',
+                'type': 'date'
+            }),
+            "notes": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Заметки'
+            }),
+        }
+
+
+class MeetingForm(ModelForm):
+    class Meta:
+        model = Meetings
+        fields = ['userID', 'iditem', 'title', 'sellprice', 'datemeeting', 'notes']
+        widgets = {
+            "title": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Name'
+            }),
+            "sellprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Model Sell Price'
+            }),
+            "datemeeting": DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Дата встречи',
                 'type': 'date'
             }),
             "notes": TextInput(attrs={

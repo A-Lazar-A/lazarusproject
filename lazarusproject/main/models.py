@@ -55,3 +55,19 @@ class Table(models.Model):
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
+
+
+class Meetings(models.Model):
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
+    title = models.CharField('Name', max_length=100)
+    iditem = models.IntegerField(null=True)
+    datemeeting = models.DateField(null=True)
+    sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
+    notes = models.CharField('Notes', max_length=255, blank=True, default='')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Meeting'
+        verbose_name_plural = 'Meetings'
