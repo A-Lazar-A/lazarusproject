@@ -108,19 +108,21 @@
         </div>
     </div>
 </div>
+
 <div class="container">
+    <input class="form-control" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()">
     <table id="myTable" class="table table-bordered border-dark ">
         <thead>
         <tr>
-            <th onclick="sortTable(0)">Название</th>
-            <th onclick="sortTable(1)">Size</th>
-            <th onclick="sortTable(2)">Цена покупки</th>
-            <th onclick="sortTable(3)">Цена продажи</th>
+            <th onclick="sortTable(0)" style="cursor: pointer">Название</th>
+            <th onclick="sortTable(1)" style="cursor: pointer">Size</th>
+            <th onclick="sortTable(2)" style="cursor: pointer">Цена покупки</th>
+            <th onclick="sortTable(3)" style="cursor: pointer">Цена продажи</th>
             <th>Доп расходы</th>
-            <th onclick="sortTable(5)">Дата покупки</th>
-            <th onclick="sortTable(6)">Дата продажи</th>
+            <th onclick="sortTable(5)" style="cursor: pointer">Дата покупки</th>
+            <th onclick="sortTable(6)" style="cursor: pointer">Дата продажи</th>
             <th>Заметки</th>
-            <th onclick="sortTable(8)">Прибыль</th>
+            <th onclick="sortTable(8)" style="cursor: pointer">Прибыль</th>
             <th></th>
             <th></th>
             <th></th>
@@ -271,6 +273,25 @@
 </div>
 
 <script>
+function tableSearch() {
+    var phrase = document.getElementById('search-text');
+    var table = document.getElementById('myTable');
+    var regPhrase = new RegExp(phrase.value, 'i');
+    var flag = false;
+    for (var i = 1; i < table.rows.length; i++) {
+        flag = false;
+        for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+            flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
+            if (flag) break;
+        }
+        if (flag) {
+            table.rows[i].style.display = "";
+        } else {
+            table.rows[i].style.display = "none";
+        }
+
+    }
+}
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("myTable");
