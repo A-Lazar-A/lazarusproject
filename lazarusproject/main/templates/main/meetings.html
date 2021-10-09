@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+<!--<p>{{ el.title }}</p>-->
+<!--<p>{{ el.sellprice }}</p>-->
+<!--<p>{{ el.datemeeting|date }}</p>-->
+<!--<p>{{ el.userID}}</p>-->
+<!--<p>{{ el.title }}</p><br>-->
+
+
+<div class="container p-3">
+
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        {% for el in table %}
+        {% if request.user == el.userID %}
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    <div class="row justify-content-end">
+                        <div class="col-8">
+                            <h4 class="my-0 fw-normal">{{ el.title }}</h4>
+                        </div>
+                        <div class="col-2">
+                            <form id="delete_meeting{{el.id}}" action="{% url 'meeting-delete' el.id %}" method="post">
+                                {% csrf_token %}
+                            </form>
+                            <a href="javascript:void()" onclick="delete_meeting({{el.id}})">
+                                <button type="button" class="btn-close" aria-label="Close"></button>
+                            </a>
+                            <script>
+                        function delete_meeting(x) {
+                            document.getElementById('delete_meeting'+x).submit()
+                        }
+                            </script>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ el.sellprice }}</h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>{{el.datemeeting|date }}</li>
+                        <li>{{el.notes}}</li>
+                    </ul>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <form id="done_meeting{{el.id}}" action="{% url 'meeting-done' el.id %}" method="post">
+                            {% csrf_token %}
+                        </form>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary" form="done_meeting{{el.id}}">Продано</button>
+                        <button type="submit" class="w-100 btn btn-lg btn-danger" form="delete_meeting{{el.id}}">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

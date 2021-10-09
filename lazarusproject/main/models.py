@@ -43,7 +43,7 @@ class Table(models.Model):
     sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
     anyprice = models.DecimalField(blank=False, null=False, default=0,max_digits=19, decimal_places=2)
     value = models.DecimalField(blank=True, null=True, editable=False, max_digits=19, decimal_places=2)
-    size = models.CharField('Size', max_length=10, choices=US_SIZES)
+    size = models.CharField('Size', max_length=10, choices=US_SIZES, default='0')
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 
     def __str__(self):
@@ -60,13 +60,16 @@ class Table(models.Model):
 class Meetings(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
     title = models.CharField('Name', max_length=100)
-    iditem = models.IntegerField(null=True)
+    item_id = models.IntegerField('item_id', default=0)
     datemeeting = models.DateField(null=True)
     sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return '/inventory/'
 
     class Meta:
         verbose_name = 'Meeting'

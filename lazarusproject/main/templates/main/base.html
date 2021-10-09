@@ -8,6 +8,7 @@
             integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
 </head>
 <body>
 <header class="d-flex justify-content-center py-3 border-bottom">
@@ -15,7 +16,7 @@
         <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
         <li class="nav-item"><a href="{% url 'inventory' %}" class="nav-link">Inventory</a></li>
         <li class="nav-item"><a href="{% url 'statistic' %}" class="nav-link">Statistic</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Meetings</a></li>
+        <li class="nav-item"><a href="{% url 'meetings' %}" class="nav-link">Meetings</a></li>
         <li class="nav-item"><a href="{% url 'delivery' %}" class="nav-link">Delivery</a></li>
 
     </ul>

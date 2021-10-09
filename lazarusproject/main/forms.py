@@ -6,9 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class TableForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["size"].empty_label = 'Выбрать размер'
 
     class Meta:
         model = Table
@@ -55,7 +52,7 @@ class TableForm(ModelForm):
 class MeetingForm(ModelForm):
     class Meta:
         model = Meetings
-        fields = ['userID', 'iditem', 'title', 'sellprice', 'datemeeting', 'notes']
+        fields = ['userID', 'title', 'datemeeting', 'sellprice', 'notes']
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',

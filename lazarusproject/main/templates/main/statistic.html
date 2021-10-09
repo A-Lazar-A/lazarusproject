@@ -1,8 +1,164 @@
 {% extends 'main/base.html' %}
 
 
-
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-time" data-bs-toggle="tab" data-bs-target="#all-time-data" type="button"
+                role="tab" aria-controls="home" aria-selected="true">Все время
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="year" data-bs-toggle="tab" data-bs-target="#year-data" type="button" role="tab"
+                aria-controls="profile" aria-selected="false">Год
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="month" data-bs-toggle="tab" data-bs-target="#month-data" type="button" role="tab"
+                aria-controls="contact" aria-selected="false">Месяц
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="week" data-bs-toggle="tab" data-bs-target="#week-data" type="button" role="tab"
+                aria-controls="contact" aria-selected="false">Неделя
+        </button>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="all-time-data" role="tabpanel" aria-labelledby="all-time">
+        <div class="container p-3">
+            <canvas id="AllTimeChart"></canvas>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="year-data" role="tabpanel" aria-labelledby="year">
+        <div class="container p-3">
+            <canvas id="YearTimeChart"></canvas>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="month-data" role="tabpanel" aria-labelledby="month">
+        <div class="container p-3">
+            <canvas id="MonthTimeChart"></canvas>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="week-data" role="tabpanel" aria-labelledby="week">
+        <div class="container p-3">
+            <canvas id="WeekTimeChart"></canvas>
+        </div>
+    </div>
+</div>
+
 <h4>Статистика за все время\год\месяц\неделю</h4>
+
+<script type="text/javascript">
+
+const labels_all = {{dates|safe}};
+const data_all = {
+  labels: labels_all,
+  datasets: [{
+    label: 'Income',
+    backgroundColor: 'rgb(0, 0, 236)',
+    borderColor: 'rgb(10, 0, 236)',
+    maxBarThickness: 40,
+    data: {{income|safe}},
+  }]
+};
+const config_all = {
+  type: 'bar',
+  data: data_all,
+  options: {
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+};
+var AllTimeChart = new Chart(
+    document.getElementById('AllTimeChart'),
+    config_all
+  );
+
+const labels_year = {{year_dates|safe}};
+const data_year = {
+  labels: labels_year,
+  datasets: [{
+    label: 'Income',
+    backgroundColor: 'rgb(0, 0, 236)',
+    borderColor: 'rgb(10, 0, 236)',
+    maxBarThickness: 40,
+    data: {{year_income|safe}},
+  }]
+};
+const config_year = {
+  type: 'bar',
+  data: data_year,
+  options: {
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+};
+var YearTimeChart = new Chart(
+    document.getElementById('YearTimeChart'),
+    config_year
+  );
+
+const labels_month = {{month_dates|safe}};
+const data_month = {
+  labels: labels_month,
+  datasets: [{
+    label: 'Income',
+    backgroundColor: 'rgb(0, 0, 236)',
+    borderColor: 'rgb(10, 0, 236)',
+    maxBarThickness: 40,
+    data: {{month_income|safe}},
+  }]
+};
+const config_month = {
+  type: 'bar',
+  data: data_month,
+  options: {
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+};
+var MonthTimeChart = new Chart(
+    document.getElementById('MonthTimeChart'),
+    config_month
+  );
+
+const labels_week = {{week_dates|safe}};
+const data_week = {
+  labels: labels_week,
+  datasets: [{
+    label: 'Income',
+    backgroundColor: 'rgb(0, 0, 236)',
+    borderColor: 'rgb(10, 0, 236)',
+    maxBarThickness: 40,
+    data: {{week_income|safe}},
+  }]
+};
+const config_week = {
+  type: 'bar',
+  data: data_week,
+  options: {
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+};
+var WeekTimeChart = new Chart(
+    document.getElementById('WeekTimeChart'),
+    config_week
+  );
+</script>
 {% endblock %}
 
