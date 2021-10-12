@@ -81,10 +81,12 @@ class ItemFormView(LoginRequiredMixin, FormView):
     form_class = TableForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.userID = self.request.user
-        self.object.value = self.object.sellprice - self.object.price
-        self.object.save()
+        for _ in range(form.cleaned_data['extra']):
+            print(1)
+            self.object = form.save(commit=False)
+            self.object.userID = self.request.user
+            self.object.value = self.object.sellprice - self.object.price
+            self.object.save()
         return super().form_valid(form)
 
 

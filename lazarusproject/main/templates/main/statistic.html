@@ -3,51 +3,59 @@
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="all-time" data-bs-toggle="tab" data-bs-target="#all-time-data" type="button"
-                role="tab" aria-controls="home" aria-selected="true">Все время
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="year" data-bs-toggle="tab" data-bs-target="#year-data" type="button" role="tab"
-                aria-controls="profile" aria-selected="false">Год
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="month" data-bs-toggle="tab" data-bs-target="#month-data" type="button" role="tab"
-                aria-controls="contact" aria-selected="false">Месяц
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="week" data-bs-toggle="tab" data-bs-target="#week-data" type="button" role="tab"
-                aria-controls="contact" aria-selected="false">Неделя
-        </button>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="all-time-data" role="tabpanel" aria-labelledby="all-time">
-        <div class="container p-3">
-            <canvas id="AllTimeChart"></canvas>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="year-data" role="tabpanel" aria-labelledby="year">
-        <div class="container p-3">
-            <canvas id="YearTimeChart"></canvas>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="month-data" role="tabpanel" aria-labelledby="month">
-        <div class="container p-3">
-            <canvas id="MonthTimeChart"></canvas>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="week-data" role="tabpanel" aria-labelledby="week">
-        <div class="container p-3">
-            <canvas id="WeekTimeChart"></canvas>
+<div class="py-3">
+    <div class="container border rounded-3 py-3">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-time" data-bs-toggle="tab" data-bs-target="#all-time-data"
+                        type="button"
+                        role="tab" aria-controls="home" aria-selected="true">Все время
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="year" data-bs-toggle="tab" data-bs-target="#year-data" type="button"
+                        role="tab"
+                        aria-controls="profile" aria-selected="false">Год
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="month" data-bs-toggle="tab" data-bs-target="#month-data" type="button"
+                        role="tab"
+                        aria-controls="contact" aria-selected="false">Месяц
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="week" data-bs-toggle="tab" data-bs-target="#week-data" type="button"
+                        role="tab"
+                        aria-controls="contact" aria-selected="false">Неделя
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content container" id="myTabContent">
+            <div class="tab-pane fade show active" id="all-time-data" role="tabpanel" aria-labelledby="all-time">
+                <div class="container p-3">
+                    <canvas id="AllTimeChart"></canvas>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="year-data" role="tabpanel" aria-labelledby="year">
+                <div class="container p-3">
+                    <canvas id="YearTimeChart"></canvas>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="month-data" role="tabpanel" aria-labelledby="month">
+                <div class="container p-3">
+                    <canvas id="MonthTimeChart"></canvas>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="week-data" role="tabpanel" aria-labelledby="week">
+                <div class="container p-3">
+                    <canvas id="WeekTimeChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <h4>Статистика за все время\год\месяц\неделю</h4>
 
 <script type="text/javascript">
@@ -159,6 +167,7 @@ var WeekTimeChart = new Chart(
     document.getElementById('WeekTimeChart'),
     config_week
   );
+
 </script>
 {% endblock %}
 

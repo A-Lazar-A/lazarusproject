@@ -6,6 +6,10 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class TableForm(ModelForm):
+    extra = forms.IntegerField(required=True,initial='1', min_value=1, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Кол-во'
+    }))
 
     class Meta:
         model = Table
@@ -15,7 +19,7 @@ class TableForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Model Name'
             }),
-            "size": Select(choices=US_SIZES,  attrs={
+            "size": Select(choices=US_SIZES, attrs={
                 'class': 'form-select',
                 'aria-label': '.form-select-lg example',
                 'placeholder': 'Model Size'
@@ -106,5 +110,3 @@ class AuthUserForm(AuthenticationForm, ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-
-

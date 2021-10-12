@@ -96,7 +96,9 @@
                         <h6>Дата продажи</h6>
 
                         {{ form.datesell }}<br>
-                        {{ form.notes}}
+                        {{ form.notes}}<br>
+                        <h6>Кол-во(не работает)</h6>
+                        {{ form.extra}}
                     </form>
                     <script>document.getElementById('id_datebuy').valueAsDate = new Date();</script>
                 </div>
@@ -272,6 +274,7 @@
 
 
 
+
                 </script>
             </td>
         </tr>
@@ -378,6 +381,7 @@ function sortTable(n) {
     }
   }
 }
+
 
 
 </script>
