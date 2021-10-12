@@ -1,19 +1,17 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Table, Meetings
-from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm
-from django.urls import reverse, reverse_lazy
-from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.models import User
+from datetime import timedelta
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Sum
-from datetime import timedelta
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.utils import timezone
-import matplotlib.pyplot as plt, mpld3
-import numpy as np
+from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
+
+from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm
+from .models import Table, Meetings
 
 
 class MainTemplateView(LoginRequiredMixin, TemplateView):
@@ -82,11 +80,11 @@ class ItemFormView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         for _ in range(form.cleaned_data['extra']):
-            print(1)
-            self.object = form.save(commit=False)
-            self.object.userID = self.request.user
-            self.object.value = self.object.sellprice - self.object.price
-            self.object.save()
+            object = form.save(commit=False)
+            object.pk = None  # yes, that is hack
+            object.userID = self.request.user
+            object.value = object.sellprice - object.price
+            object.save()
         return super().form_valid(form)
 
 
@@ -122,6 +120,7 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
         item.save()
         self.object.delete()
         return HttpResponseRedirect(success_url)
+
 
 class MeetingDeleteView(LoginRequiredMixin, DeleteView):
     login_url = 'login'
