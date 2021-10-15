@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
 
-from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm
+from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm
 from .models import Table, Meetings
 
 
@@ -44,8 +44,10 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         dic_sum['value__sum'] = None or dic_sum['value__sum'] or 0
         item_form = TableForm(self.request.GET or None)
         meetings_form = MeetingForm(self.request.GET or None)
+        add_item_to_meeting_form = AddItemForMeetingForm(self.request.GET or None, username=self.request.user)
         kwargs['form'] = item_form
         kwargs['meetings_form'] = meetings_form
+        kwargs['add_item_to_meeting_form'] = add_item_to_meeting_form
         kwargs['year_value'] = year_value
         kwargs['month_value'] = month_value
         kwargs['week_value'] = week_value
@@ -81,9 +83,9 @@ class ItemFormView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         for _ in range(form.cleaned_data['extra']):
             object = form.save(commit=False)
-            object.pk = None  # yes, that is hack
+            object.pk = None
             object.userID = self.request.user
-            object.value = object.sellprice - object.price
+            object.value = object.sellprice - object.price - object.anyprice
             object.save()
         return super().form_valid(form)
 
@@ -97,8 +99,11 @@ class MeetingsFormView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.userID = self.request.user
-        self.object.item_id = self.kwargs['pk']
+        it = Table.objects.get(id=self.kwargs['pk'])
         self.object.save()
+        it.meet = self.object
+        it.save()
+
         return super().form_valid(form)
 
 
@@ -113,10 +118,10 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
         if self.request.user != self.object.userID:
             return self.handle_no_permission()
         success_url = self.get_success_url()
-        item = Table.objects.get(id=self.object.item_id)
+        item = Table.objects.get(meet=self.object)
         item.datesell = self.object.datemeeting
         item.sellprice = self.object.sellprice
-        item.value = item.sellprice - item.price
+        item.value = item.sellprice - item.price - item.anyprice
         item.save()
         self.object.delete()
         return HttpResponseRedirect(success_url)

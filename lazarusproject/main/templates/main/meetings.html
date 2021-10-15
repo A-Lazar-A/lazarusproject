@@ -44,6 +44,10 @@
                     <h1 class="card-title pricing-card-title">{{ el.sellprice }}</h1>
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>{{el.datemeeting|date }}</li>
+                        <li>На продажу</li>
+                        {% for item in el.get_item%}
+                        <li>{{item}}</li>
+   {%endfor %}
                         <li>{{el.notes}}</li>
                     </ul>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">

@@ -3,13 +3,13 @@ from .models import Table, Meetings
 
 
 class TableAdmin(admin.ModelAdmin):
-    list_display = ('id', 'userID', 'title', 'size', 'price', 'sellprice', 'anyprice', 'datebuy', 'datesell', 'value', 'notes')
+    list_display = ('id', 'userID', 'title', 'size', 'price', 'sellprice', 'anyprice', 'datebuy', 'datesell', 'value', 'notes', 'meet')
     list_filter = ('userID', 'title', 'price', 'sellprice', 'datebuy', 'datesell', 'value')
     search_fields = ('userID', 'title', 'datebuy', 'datesell')
 
 
 class MeetingsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'userID', 'item_id', 'title', 'sellprice', 'datemeeting', 'notes')
+    list_display = ('id', 'userID', 'title', 'sellprice', 'datemeeting', 'notes')
     list_filter = ('userID', 'title', 'sellprice', 'datemeeting')
     search_fields = ('userID', 'title', 'sellprice', 'datemeeting')
 

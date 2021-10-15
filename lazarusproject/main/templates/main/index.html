@@ -226,6 +226,7 @@
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+                                <div class="row">
                                 <div class="d-flex justify-content-center py-3">
                                     <form id="form_create_meeting{{el.id}}" action="{% url 'meeting-create' el.id %}"
                                           name="create" method="post">
@@ -241,6 +242,13 @@
                                         {{ meetings_form.notes}}<br>
                                     </form>
                                 </div>
+                                    <div class="d-flex justify-content-center py-3">
+                                    <form  method="post">
+                                        {% csrf_token %}
+                                        {{add_item_to_meeting_form.user_meetings}}
+                                    </form>
+                                </div>
+                                    </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

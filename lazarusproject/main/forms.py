@@ -78,6 +78,20 @@ class MeetingForm(ModelForm):
         }
 
 
+class AddItemForMeetingForm(forms.Form):
+    user_meetings = forms.ModelChoiceField(queryset=Meetings.objects.none(), empty_label=None, widget=Select(attrs={
+        'class': 'form-select',
+        'aria-label': '.form-select-lg example'
+    }))
+
+    def __init__(self, *args, **kwargs):
+        self.username = kwargs.pop('username', None)
+        # print(self.username)
+
+        super(AddItemForMeetingForm, self).__init__(*args, **kwargs)
+        self.fields['user_meetings'].queryset = Meetings.objects.filter(userID=self.username)
+        # print(Meetings.objects.filter(userID=self.username))
+
 class SignUpForm(ModelForm):
     class Meta:
         model = User
