@@ -53,6 +53,7 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         kwargs['week_value'] = week_value
         kwargs['sum'] = dic_sum['value__sum']
         kwargs['table'] = Table.objects.order_by('-id')
+        kwargs['meetings'] = Meetings.objects.filter(userID=self.request.user).exists()
         return super().get_context_data(**kwargs)
 
     # def get(self, request, *args, **kwargs):
@@ -107,6 +108,16 @@ class MeetingsFormView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
+    template_name = 'main/index.html'
+    success_url = reverse_lazy('inventory')
+    form_class = AddItemForMeetingForm
+    model = Table
+
+
+
+
 class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
     login_url = 'login'
     model = Meetings
@@ -118,11 +129,12 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
         if self.request.user != self.object.userID:
             return self.handle_no_permission()
         success_url = self.get_success_url()
-        item = Table.objects.get(meet=self.object)
-        item.datesell = self.object.datemeeting
-        item.sellprice = self.object.sellprice
-        item.value = item.sellprice - item.price - item.anyprice
-        item.save()
+        items = Table.objects.filter(meet=self.object)
+        for item in items:
+            item.datesell = self.object.datemeeting
+            item.sellprice = self.object.sellprice
+            item.value = item.sellprice - item.price - item.anyprice
+            item.save()
         self.object.delete()
         return HttpResponseRedirect(success_url)
 
@@ -221,7 +233,7 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.userID = self.request.user
-        self.object.value = self.object.sellprice - self.object.price
+        self.object.value = self.object.sellprice - self.object.price - self.object.anyprice
         self.object.save()
         return super().form_valid(form)
 

@@ -65,7 +65,7 @@ class Table(models.Model):
     value = models.DecimalField(blank=True, null=True, editable=False, max_digits=19, decimal_places=2)
     size = models.CharField('Size', max_length=10, choices=US_SIZES, default='0')
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
-    meet = models.ForeignKey(Meetings, on_delete=models.SET_DEFAULT, default=Meetings.objects.first().id)
+    meet = models.ForeignKey(Meetings, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.title

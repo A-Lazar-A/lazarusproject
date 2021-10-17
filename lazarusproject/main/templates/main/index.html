@@ -226,36 +226,56 @@
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+
                                 <div class="row">
-                                <div class="d-flex justify-content-center py-3">
-                                    <form id="form_create_meeting{{el.id}}" action="{% url 'meeting-create' el.id %}"
-                                          name="create" method="post">
-                                        {% csrf_token %}
-                                        <h6>Имя</h6>
-                                        {{ meetings_form.title }}<br>
-                                        <h6>Цена продажи</h6>
-                                        {{ meetings_form.sellprice }}<br>
+                                    <div class="d-flex justify-content-center py-3 col">
+                                        <div class="row">
+                                            <form id="form_create_meeting{{el.id}}"
+                                                  action="{% url 'meeting-create' el.id %}"
+                                                  name="create" method="post">
+                                                {% csrf_token %}
+                                                <h6>Имя</h6>
+                                                {{ meetings_form.title }}<br>
+                                                <h6>Цена продажи</h6>
+                                                {{ meetings_form.sellprice }}<br>
 
-                                        <h6>Дата покупки</h6>
-                                        {{ meetings_form.datemeeting }}<br>
+                                                <h6>Дата покупки</h6>
+                                                {{ meetings_form.datemeeting }}<br>
 
-                                        {{ meetings_form.notes}}<br>
-                                    </form>
-                                </div>
-                                    <div class="d-flex justify-content-center py-3">
-                                    <form  method="post">
-                                        {% csrf_token %}
-                                        {{add_item_to_meeting_form.user_meetings}}
-                                    </form>
-                                </div>
+                                                {{ meetings_form.notes}}<br>
+                                            </form>
+                                            <div>
+                                                <button type="submit" form="form_create_meeting{{el.id}}" value="create"
+                                                        class="btn btn-primary">
+                                                    Create
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
+                                    {% if meetings %}
+                                    <div class="d-flex justify-content-center py-3 col">
+                                        <div class="row">
+                                            <form id="form_add_meeting{{el.id}}" action="{% url 'meeting-add' el.id %}"
+                                                  name="add" method="post">
+                                                {% csrf_token %}
+                                                {{add_item_to_meeting_form.user_meetings}}
+                                                {{add_item_to_meeting_form.meet}}
+                                            </form>
+                                            <div>
+                                                <button type="submit" form="form_add_meeting{{el.id}}" value="add"
+                                                        class="btn btn-primary">
+                                                    Добавить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" form="form_create_meeting{{el.id}}" value="create"
-                                        class="btn btn-primary">
-                                    Create
-                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -278,6 +298,9 @@
                             document.getElementById('delete_form'+x).submit()
 
                         }
+
+
+
 
 
 
@@ -389,6 +412,9 @@ function sortTable(n) {
     }
   }
 }
+
+
+
 
 
 

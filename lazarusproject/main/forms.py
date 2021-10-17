@@ -56,7 +56,7 @@ class TableForm(ModelForm):
 class MeetingForm(ModelForm):
     class Meta:
         model = Meetings
-        fields = ['userID', 'title', 'datemeeting', 'sellprice', 'notes']
+        fields = ['title', 'datemeeting', 'sellprice', 'notes']
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',
@@ -78,19 +78,18 @@ class MeetingForm(ModelForm):
         }
 
 
-class AddItemForMeetingForm(forms.Form):
-    user_meetings = forms.ModelChoiceField(queryset=Meetings.objects.none(), empty_label=None, widget=Select(attrs={
-        'class': 'form-select',
-        'aria-label': '.form-select-lg example'
-    }))
+class AddItemForMeetingForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.username = kwargs.pop('username', None)
-        # print(self.username)
-
         super(AddItemForMeetingForm, self).__init__(*args, **kwargs)
-        self.fields['user_meetings'].queryset = Meetings.objects.filter(userID=self.username)
-        # print(Meetings.objects.filter(userID=self.username))
+        self.fields['meet'].queryset = Meetings.objects.filter(userID=self.username)
+
+    class Meta:
+        model = Table
+        fields = ['meet']
+
+
 
 class SignUpForm(ModelForm):
     class Meta:
