@@ -81,8 +81,10 @@ class MeetingForm(ModelForm):
 class AddItemForMeetingForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.username = kwargs.pop('username', None)
+        self.username = kwargs.pop('username')
+        print(self.username)
         super(AddItemForMeetingForm, self).__init__(*args, **kwargs)
+        print(Meetings.objects.filter(userID=self.username))
         self.fields['meet'].queryset = Meetings.objects.filter(userID=self.username)
 
     class Meta:

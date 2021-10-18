@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
@@ -114,6 +115,11 @@ class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('inventory')
     form_class = AddItemForMeetingForm
     model = Table
+
+    def get_form_kwargs(self):
+        kwargs = super(AddItemForMeetingFormView, self).get_form_kwargs()
+        kwargs['username'] = self.request.user
+        return kwargs
 
 
 
