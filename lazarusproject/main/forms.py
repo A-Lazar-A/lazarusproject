@@ -80,16 +80,24 @@ class MeetingForm(ModelForm):
 
 class AddItemForMeetingForm(ModelForm):
 
+    itemsellprice = forms.DecimalField(required=True, initial='0', min_value=0, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Кол-во'}))
+
     def __init__(self, *args, **kwargs):
         self.username = kwargs.pop('username')
-        print(self.username)
         super(AddItemForMeetingForm, self).__init__(*args, **kwargs)
-        print(Meetings.objects.filter(userID=self.username))
         self.fields['meet'].queryset = Meetings.objects.filter(userID=self.username)
+        self.fields['meet'].empty_label = None
 
     class Meta:
         model = Table
-        fields = ['meet']
+        fields = ['meet', 'itemsellprice']
+        widgets = {
+            "meet": Select(attrs={
+                'class': 'form-select',
+                'aria-label': '.form-select-lg example',
+            })}
 
 
 

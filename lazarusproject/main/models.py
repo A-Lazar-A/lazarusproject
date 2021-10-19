@@ -36,9 +36,8 @@ US_SIZES = (
 class Meetings(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
     title = models.CharField('Name', max_length=100)
-    # item_id = models.IntegerField('item_id', default=0)
     datemeeting = models.DateField(null=True)
-    sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
+    sellprice = models.DecimalField(blank=False, null=True, default=0, max_digits=19, decimal_places=2)
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 
     def get_item(self):
@@ -54,6 +53,22 @@ class Meetings(models.Model):
         verbose_name = 'Meeting'
         verbose_name_plural = 'Meetings'
 
+
+class PotentialSellPrice(models.Model):
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
+    potentialprice = models.DecimalField(max_digits=19, decimal_places=2)
+
+    def __str__(self):
+        return str(self.potentialprice)
+
+    def get_absolute_url(self):
+        return '/inventory/'
+
+    class Meta:
+        verbose_name = 'Potential Sell Price'
+        verbose_name_plural = 'Potential Sell Prices'
+
+
 class Table(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
     title = models.CharField('Name', max_length=100)
@@ -66,6 +81,7 @@ class Table(models.Model):
     size = models.CharField('Size', max_length=10, choices=US_SIZES, default='0')
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
     meet = models.ForeignKey(Meetings, on_delete=models.SET_NULL, null=True)
+    possibleprice = models.OneToOneField(PotentialSellPrice, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.title
@@ -76,6 +92,8 @@ class Table(models.Model):
     class Meta:
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
+
+
 
 
 

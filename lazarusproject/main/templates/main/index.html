@@ -258,13 +258,15 @@
                                             <form id="form_add_meeting{{el.id}}" action="{% url 'meeting-add' el.id %}"
                                                   name="add" method="post">
                                                 {% csrf_token %}
-                                                {{add_item_to_meeting_form.user_meetings}}
-                                                {{add_item_to_meeting_form.meet}}
+                                                <h6>Цена продажи</h6>
+                                                {{add_item_to_meeting_form.itemsellprice}}<br>
+                                                <h6>Встреча</h6>
+                                                {{add_item_to_meeting_form.meet}}<br>
                                             </form>
                                             <div>
                                                 <button type="submit" form="form_add_meeting{{el.id}}" value="add"
                                                         class="btn btn-primary">
-                                                    Добавить
+                                                    Добавить к существующей встрече
                                                 </button>
                                             </div>
                                         </div>

@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
 
 from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm
-from .models import Table, Meetings
+from .models import Table, Meetings, PotentialSellPrice
 
 
 class MainTemplateView(LoginRequiredMixin, TemplateView):
@@ -104,8 +104,10 @@ class MeetingsFormView(LoginRequiredMixin, FormView):
         it = Table.objects.get(id=self.kwargs['pk'])
         self.object.save()
         it.meet = self.object
+        pps = PotentialSellPrice(userID=self.request.user, potentialprice=self.object.sellprice)
+        pps.save()
+        it.possibleprice = pps
         it.save()
-
         return super().form_valid(form)
 
 
@@ -121,7 +123,17 @@ class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
         kwargs['username'] = self.request.user
         return kwargs
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        sell = form.cleaned_data["itemsellprice"]
+        pps = PotentialSellPrice(userID=self.request.user, potentialprice=sell)
+        pps.save()
+        self.object.possibleprice = pps
+        self.object.meet.sellprice += sell
+        self.object.meet.save()
+        self.object.save()
 
+        return super().form_valid(form)
 
 
 class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
@@ -138,8 +150,10 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
         items = Table.objects.filter(meet=self.object)
         for item in items:
             item.datesell = self.object.datemeeting
-            item.sellprice = self.object.sellprice
+            item.sellprice = item.possibleprice.potentialprice
             item.value = item.sellprice - item.price - item.anyprice
+            item.possibleprice.delete()
+            item.possibleprice = None
             item.save()
         self.object.delete()
         return HttpResponseRedirect(success_url)
