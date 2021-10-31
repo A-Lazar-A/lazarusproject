@@ -1,3 +1,6 @@
+from binance.spot import Spot
+from decimal import Decimal
+
 from datetime import timedelta
 
 from django.contrib.auth import authenticate, login
@@ -85,6 +88,31 @@ class ItemFormView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         for _ in range(form.cleaned_data['extra']):
             object = form.save(commit=False)
+            object.price = object.currencyprice
+            object.sellprice = object.currencysellprice
+            if object.currencybuy != '₽':
+                client = Spot(key='key',
+                              secret='secret')
+                if object.currencybuy == '$':
+                    object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
+                elif object.currencybuy == '€':
+                    object.sellprice *= Decimal(client.ticker_price('EURRUB')['price'])
+                elif object.currencybuy == 'SOL':
+                    object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
+                elif object.currencybuy == 'ETH':
+                    object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
+
+            if object.currencysell != '₽':
+                client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                              secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+                if object.currencybuy == '$':
+                    object.price *= Decimal(client.ticker_price('USDTRUB')['price'])
+                elif object.currencybuy == '€':
+                    object.price *= Decimal(client.ticker_price('EURRUB')['price'])
+                elif object.currencybuy == 'SOL':
+                    object.price *= Decimal(client.ticker_price('SOLRUB')['price'])
+                elif object.currencybuy == 'ETH':
+                    object.price *= Decimal(client.ticker_price('ETHRUB')['price'])
             object.pk = None
             object.userID = self.request.user
             object.value = object.sellprice - object.price - object.anyprice

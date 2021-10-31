@@ -1,4 +1,4 @@
-from .models import Table, US_SIZES, Meetings
+from .models import Table, US_SIZES, CURRENCY_CHOICES, Meetings
 from django import forms
 from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput
 from django.contrib.auth.models import User
@@ -13,7 +13,7 @@ class TableForm(ModelForm):
 
     class Meta:
         model = Table
-        fields = ["userID", "title", "size", "price", "sellprice", "anyprice", "datebuy", "datesell", "notes"]
+        fields = ["userID", "title", "size", "currencyprice", "currencybuy", "currencysell", "currencysellprice", "anyprice", "datebuy", "datesell", "notes"]
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',
@@ -24,11 +24,19 @@ class TableForm(ModelForm):
                 'aria-label': '.form-select-lg example',
                 'placeholder': 'Model Size'
             }),
-            "price": NumberInput(attrs={
+            "currencyprice": NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Model Price'
             }),
-            "sellprice": NumberInput(attrs={
+            "currencybuy": Select(choices=CURRENCY_CHOICES, attrs={
+                'class': 'form-select',
+                'placeholder': 'Model Currency'
+            }),
+            "currencysell": Select(choices=CURRENCY_CHOICES, attrs={
+                'class': 'form-select',
+                'placeholder': 'Model Currency'
+            }),
+            "currencysellprice": NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Model Sell Price'
             }),

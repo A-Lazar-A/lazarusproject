@@ -4,6 +4,14 @@ from datetime import date
 
 # Create your models here.
 
+CURRENCY_CHOICES = (
+        ('₽', '₽'),
+        ('$', '$'),
+        ('€', '€'),
+        ('SOL', 'SOL'),
+        ('ETH', 'ETH')
+    )
+
 US_SIZES = (
     ('NO SIZE', 'NO SIZE'),
     ('3', '3 US'),
@@ -74,11 +82,15 @@ class Table(models.Model):
     title = models.CharField('Name', max_length=100)
     datebuy = models.DateField(null=True)
     datesell = models.DateField(blank=True, null=True)
-    price = models.DecimalField(max_digits=19, decimal_places=2)
+    price = models.DecimalField(max_digits=19, decimal_places=2, default=0)
     sellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
-    anyprice = models.DecimalField(blank=False, null=False, default=0,max_digits=19, decimal_places=2)
+    anyprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=2)
     value = models.DecimalField(blank=True, null=True, editable=False, max_digits=19, decimal_places=2)
-    size = models.CharField('Size', max_length=10, choices=US_SIZES, default='0')
+    currencysellprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=4)
+    currencyprice = models.DecimalField(blank=False, null=False, default=0, max_digits=19, decimal_places=4)
+    currencysell = models.CharField('CurrencySell', max_length=10, choices=CURRENCY_CHOICES, default='rub')
+    currencybuy = models.CharField('CurrencyBuy', max_length=10, choices=CURRENCY_CHOICES, default='rub')
+    size = models.CharField('Size', max_length=10, choices=US_SIZES, default='NO SIZE')
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
     meet = models.ForeignKey(Meetings, on_delete=models.SET_NULL, null=True)
     possibleprice = models.OneToOneField(PotentialSellPrice, on_delete=models.SET_NULL, null=True)

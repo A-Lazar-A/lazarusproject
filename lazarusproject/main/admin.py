@@ -3,7 +3,7 @@ from .models import Table, Meetings, PotentialSellPrice
 
 
 class TableAdmin(admin.ModelAdmin):
-    list_display = ('id', 'userID', 'title', 'size', 'price', 'sellprice', 'anyprice', 'datebuy', 'datesell', 'value', 'notes', 'meet', 'possibleprice')
+    list_display = ('id', 'userID', 'title', 'size', 'price', 'currencybuy', 'sellprice', 'currencysell', 'anyprice', 'datebuy', 'datesell', 'value', 'notes', 'meet', 'possibleprice')
     list_filter = ('userID', 'title', 'price', 'sellprice', 'datebuy', 'datesell', 'value')
     search_fields = ('userID', 'title', 'datebuy', 'datesell')
 

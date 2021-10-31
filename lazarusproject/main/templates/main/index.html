@@ -8,27 +8,27 @@
     <div class="col-3 ">
         <figure class="text-center"><h4>Прибыль за неделю</h4></figure>
         {% if week_value >= 0 %}
-        <figure class="text-center text-success"><h4>{{ week_value }}</h4></figure>
+        <figure class="text-center text-success"><h4>{{ week_value }} ₽</h4></figure>
         {% else %}
-        <figure class="text-center text-danger"><h4>{{ week_value }}</h4></figure>
+        <figure class="text-center text-danger"><h4>{{ week_value }} ₽</h4></figure>
         {% endif %}
 
     </div>
     <div class="col-3 ">
         <figure class="text-center"><h4>Прибыль за месяц</h4></figure>
         {% if month_value >= 0 %}
-        <figure class="text-center text-success"><h4>{{ month_value }}</h4></figure>
+        <figure class="text-center text-success"><h4>{{ month_value }} ₽</h4></figure>
         {% else %}
-        <figure class="text-center text-danger"><h4>{{ month_value }}</h4></figure>
+        <figure class="text-center text-danger"><h4>{{ month_value }} ₽</h4></figure>
         {% endif %}
 
     </div>
     <div class="col-3 ">
         <figure class="text-center"><h4>Прибыль за год</h4></figure>
         {% if year_value >= 0 %}
-        <figure class="text-center text-success"><h4>{{ year_value }}</h4></figure>
+        <figure class="text-center text-success"><h4>{{ year_value }} ₽</h4></figure>
         {% else %}
-        <figure class="text-center text-danger"><h4>{{ year_value }}</h4></figure>
+        <figure class="text-center text-danger"><h4>{{ year_value }} ₽</h4></figure>
         {% endif %}
 
     </div>
@@ -36,9 +36,9 @@
     <div class="col-3 ">
         <figure class="text-center"><h4>Прибыль за все время</h4></figure>
         {% if sum >= 0 %}
-        <figure class="text-center text-success"><h4>{{ sum }}</h4></figure>
+        <figure class="text-center text-success"><h4>{{ sum }} ₽</h4></figure>
         {% else %}
-        <figure class="text-center text-danger"><h4>{{ sum }}</h4></figure>
+        <figure class="text-center text-danger"><h4>{{ sum }} ₽</h4></figure>
         {% endif %}
 
     </div>
@@ -47,11 +47,7 @@
 </div>
 {%endif%}
 <!-- Button trigger modal -->
-<div class="d-flex justify-content-center py-3">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create
-    </button>
-</div>
+
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -72,15 +68,16 @@
                         {{ form.size }}<br>
                         <h6>Цена покупки</h6>
                         <div class="input-group">
-                            <div class="input-group-text">₽</div>
-                            {{ form.price }}
+                            {{ form.currencyprice }}
+                            <div class="input-group-text">{{ form.currencybuy }}</div>
+
                         </div>
                         <br>
                         <h6>Цена продажи</h6>
 
                         <div class="input-group">
-                            <div class="input-group-text">₽</div>
-                            {{ form.sellprice }}
+                            {{ form.currencysellprice }}
+                             <div class="input-group-text">{{ form.currencysell }}</div>
                         </div>
                         <br>
                         <h6>Доп расходы</h6>
@@ -97,7 +94,7 @@
 
                         {{ form.datesell }}<br>
                         {{ form.notes}}<br>
-                        <h6>Кол-во(работает)</h6>
+                        <h6>Кол-во</h6>
                         {{ form.extra}}
                     </form>
                     <script>document.getElementById('id_datebuy').valueAsDate = new Date();</script>
@@ -112,14 +109,24 @@
 </div>
 {% if table|length == 0 %}
     <div class="d-flex justify-content-center py-3"><h1>Инвентарь пуст!</h1></div>
+    <div class="col d-flex justify-content-center py-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create
+    </button>
     {% else %}
 <div class="container">
-    <div class="row p-1">
-        <div class="col align-self-start">
+    <div class="row">
+    <div class="col d-flex justify-content-start py-3">
+
             <input class="form-control" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()"
                    style="width:170px;">
-        </div>
+
     </div>
+    <div class="col d-flex justify-content-end py-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create
+    </button>
+</div></div>
 
 
     <table id="myTable" class="table table-bordered border-dark ">
@@ -146,16 +153,16 @@
         <tr>
             <td>{{ el.title }} - {{ el.userID }}</td>
             <td>{{ el.size }}</td>
-            <td>{{ el.price }}</td>
-            <td>{{ el.sellprice }}</td>
-            <td>{{ el.anyprice }}</td>
+            <td>{{ el.currencyprice }} {{ el.currencybuy }}</td>
+            <td>{{ el.currencysellprice }} {{ el.currencybuy }}</td>
+            <td>{{ el.anyprice }} ₽</td>
             <td>{{ el.datebuy|date:'d.m.Y' }}</td>
             <td>{{ el.datesell|date:'d.m.Y' }}</td>
             <td>{{ el.notes }}</td>
             {% if el.value >= 0 %}
-            <td class="table-success border-dark">{{ el.value }}</td>
+            <td class="table-success border-dark">{{ el.value }} ₽</td>
             {% else %}
-            <td class="table-danger border-dark">{{ el.value }}</td>
+            <td class="table-danger border-dark">{{ el.value }} ₽</td>
             {% endif %}
             <td align="center">
                 <a class="btn btn-light btn-sm" data-bs-toggle="modal"
@@ -184,9 +191,9 @@
                                         <h6>Размер</h6>
                                         {{ form.size }}<br>
                                         <h6>Цена покупки</h6>
-                                        {{ form.price }}<br>
+                                        {{ form.currencyprice }}<br>
                                         <h6>Цена продажи</h6>
-                                        {{ form.sellprice }}<br>
+                                        {{ form.currencysellprice }}<br>
                                         <h6>Доп расходы</h6>
                                         {{ form.anyprice }}<br>
                                         <h6>Дата покупки</h6>
