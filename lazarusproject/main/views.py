@@ -53,7 +53,7 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         kwargs['month_value'] = month_value
         kwargs['week_value'] = week_value
         kwargs['sum'] = dic_sum['value__sum']
-        kwargs['table'] = Table.objects.order_by('-id')
+        kwargs['table'] = Table.objects.filter(userID=self.request.user).order_by('-id')
         kwargs['meetings'] = Meetings.objects.filter(userID=self.request.user).exists()
         return super().get_context_data(**kwargs)
 
@@ -72,7 +72,7 @@ class MeetingsListView(LoginRequiredMixin, ListView):
     model = Meetings
 
     def get_context_data(self, **kwargs):
-        kwargs['table'] = Meetings.objects.order_by('-id')
+        kwargs['table'] = Meetings.objects.filter(userID=self.request.user).order_by('-id')
         return super().get_context_data(**kwargs)
 
 

@@ -2,7 +2,7 @@
 
 
 {% block content %}
-
+{% if table|length != 0 %}
 <div class="row justify-content-end">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
     <div class="col-3 ">
@@ -45,7 +45,7 @@
 
 
 </div>
-
+{%endif%}
 <!-- Button trigger modal -->
 <div class="d-flex justify-content-center py-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -110,7 +110,9 @@
         </div>
     </div>
 </div>
-
+{% if table|length == 0 %}
+    <div class="d-flex justify-content-center py-3"><h1>Инвентарь пуст!</h1></div>
+    {% else %}
 <div class="container">
     <div class="row p-1">
         <div class="col align-self-start">
@@ -118,6 +120,7 @@
                    style="width:170px;">
         </div>
     </div>
+
 
     <table id="myTable" class="table table-bordered border-dark ">
         <thead>
@@ -137,7 +140,8 @@
         </thead>
         {% for el in table %}
 
-        {% if request.user == el.userID %}
+
+
         <tbody>
         <tr>
             <td>{{ el.title }} - {{ el.userID }}</td>
@@ -312,9 +316,10 @@
             </td>
         </tr>
         </tbody>
-        {% endif %}
+
         {% endfor %}
     </table>
+    {% endif %}
 </div>
 
 <script>
