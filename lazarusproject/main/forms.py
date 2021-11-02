@@ -29,11 +29,11 @@ class TableForm(ModelForm):
                 'placeholder': 'Model Price'
             }),
             "currencybuy": Select(choices=CURRENCY_CHOICES, attrs={
-                'class': 'form-select',
+                'class': 'form-select form-select-sm',
                 'placeholder': 'Model Currency'
             }),
             "currencysell": Select(choices=CURRENCY_CHOICES, attrs={
-                'class': 'form-select',
+                'class': 'form-select form-select-sm ',
                 'placeholder': 'Model Currency'
             }),
             "currencysellprice": NumberInput(attrs={

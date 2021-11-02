@@ -50,7 +50,7 @@
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Create</h5>
@@ -60,42 +60,63 @@
                 <div class="d-flex justify-content-center py-3">
                     <form id="form_create" action="{% url 'item-create' %}" method="post">
                         {% csrf_token %}
-                        <h6>Имя</h6>
-
-                        {{ form.title }}<br>
-                        <h6>Размер</h6>
-
-                        {{ form.size }}<br>
-                        <h6>Цена покупки</h6>
-                        <div class="input-group">
-                            {{ form.currencyprice }}
-                            <div class="input-group-text">{{ form.currencybuy }}</div>
+                        <div class="row">
+                            <div class="col-auto">
+                                <h6>Имя</h6>
+                                {{ form.title }}
+                            </div>
+                            <div class="col-auto">
+                                <h6>Размер</h6>
+                                {{ form.size }}
+                            </div>
+                            <div class="col">
+                                <h6>Дата покупки</h6>
+                                {{ form.datebuy }}
+                            </div>
+                            <div class="col">
+                                <h6>Дата продажи</h6>
+                                {{ form.datesell }}
+                            </div>
 
                         </div>
                         <br>
-                        <h6>Цена продажи</h6>
+                        <div class="row">
+                            <div class="col">
+                                <h6>Цена покупки</h6>
+                                <div class="input-group">
+                                    {{ form.currencyprice }}
+                                    <div class="input-group-text">{{ form.currencybuy }}</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <h6>Цена продажи</h6>
+                                <div class="input-group">
+                                    {{ form.currencysellprice }}
+                                    <div class="input-group-text">{{ form.currencysell }}</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <h6>Доп расходы</h6>
 
-                        <div class="input-group">
-                            {{ form.currencysellprice }}
-                             <div class="input-group-text">{{ form.currencysell }}</div>
+                                <div class="input-group" style="height: 45px">
+                                    <div class="input-group-text">₽</div>
+                                    {{ form.anyprice }}
+                                </div>
+                            </div>
                         </div>
                         <br>
-                        <h6>Доп расходы</h6>
-
-                        <div class="input-group">
-                            <div class="input-group-text">₽</div>
-                            {{ form.anyprice }}
+                        <div class="row">
+                            <div class="col">
+                                <h6>Заметки</h6>
+                                {{ form.notes}}
+                            </div>
+                            <div class="col">
+                                <h6>Кол-во</h6>
+                                {{ form.extra}}
+                            </div>
                         </div>
-                        <br>
-                        <h6>Дата покупки</h6>
 
-                        {{ form.datebuy }}<br>
-                        <h6>Дата продажи</h6>
 
-                        {{ form.datesell }}<br>
-                        {{ form.notes}}<br>
-                        <h6>Кол-во</h6>
-                        {{ form.extra}}
                     </form>
                     <script>document.getElementById('id_datebuy').valueAsDate = new Date();</script>
                 </div>
@@ -108,204 +129,210 @@
     </div>
 </div>
 {% if table|length == 0 %}
-    <div class="d-flex justify-content-center py-3"><h1>Инвентарь пуст!</h1></div>
-    <div class="col d-flex justify-content-center py-3">
+<div class="d-flex justify-content-center py-3"><h1>Инвентарь пуст!</h1></div>
+<div class="col d-flex justify-content-center py-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Create
     </button>
     {% else %}
-<div class="container">
-    <div class="row">
-    <div class="col d-flex justify-content-start py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col d-flex justify-content-start py-3">
 
-            <input class="form-control" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()"
-                   style="width:170px;">
+                <input class="form-control" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()"
+                       style="width:170px;">
 
-    </div>
-    <div class="col d-flex justify-content-end py-3">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create
-    </button>
-</div></div>
-
-
-    <table id="myTable" class="table table-bordered border-dark ">
-        <thead>
-        <tr>
-            <th onclick="sortTable(0)" style="cursor: pointer">Название</th>
-            <th onclick="sortTable(1)" style="cursor: pointer">Size</th>
-            <th onclick="sortTable(2)" style="cursor: pointer">Цена покупки</th>
-            <th onclick="sortTable(3)" style="cursor: pointer">Цена продажи</th>
-            <th>Доп расходы</th>
-            <th onclick="sortTable(5)" style="cursor: pointer">Дата покупки</th>
-            <th onclick="sortTable(6)" style="cursor: pointer">Дата продажи</th>
-            <th>Заметки</th>
-            <th onclick="sortTable(8)" style="cursor: pointer">Прибыль</th>
-            <th colspan="3"></th>
-
-        </tr>
-        </thead>
-        {% for el in table %}
+            </div>
+            <div class="col d-flex justify-content-end py-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Create
+                </button>
+            </div>
+        </div>
 
 
+        <table id="myTable" class="table table-bordered border-dark ">
+            <thead>
+            <tr>
+                <th onclick="sortTable(0)" style="cursor: pointer">Название</th>
+                <th onclick="sortTable(1)" style="cursor: pointer">Size</th>
+                <th onclick="sortTable(2)" style="cursor: pointer">Цена покупки</th>
+                <th onclick="sortTable(3)" style="cursor: pointer">Цена продажи</th>
+                <th>Доп расходы</th>
+                <th onclick="sortTable(5)" style="cursor: pointer">Дата покупки</th>
+                <th onclick="sortTable(6)" style="cursor: pointer">Дата продажи</th>
+                <th>Заметки</th>
+                <th onclick="sortTable(8)" style="cursor: pointer">Прибыль</th>
+                <th colspan="3"></th>
 
-        <tbody>
-        <tr>
-            <td>{{ el.title }} - {{ el.userID }}</td>
-            <td>{{ el.size }}</td>
-            <td>{{ el.currencyprice }} {{ el.currencybuy }}</td>
-            <td>{{ el.currencysellprice }} {{ el.currencybuy }}</td>
-            <td>{{ el.anyprice }} ₽</td>
-            <td>{{ el.datebuy|date:'d.m.Y' }}</td>
-            <td>{{ el.datesell|date:'d.m.Y' }}</td>
-            <td>{{ el.notes }}</td>
-            {% if el.value >= 0 %}
-            <td class="table-success border-dark">{{ el.value }} ₽</td>
-            {% else %}
-            <td class="table-danger border-dark">{{ el.value }} ₽</td>
-            {% endif %}
-            <td align="center">
-                <a class="btn btn-light btn-sm" data-bs-toggle="modal"
-                   data-bs-target="#editModal{{el.id}}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                         class="bi bi-pencil" viewBox="0 0 16 16">
-                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
-                    </svg>
-                </a>
-                <div class="modal fade" id="editModal{{el.id}}" tabindex="-1" aria-labelledby="editModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Edit</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="d-flex justify-content-center py-3">
-                                    <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}" name="edit"
-                                          method="post">
-                                        {% csrf_token %}
-                                        <h6>Имя</h6>
-                                        {{ form.title }}<br>
-                                        <h6>Размер</h6>
-                                        {{ form.size }}<br>
-                                        <h6>Цена покупки</h6>
-                                        {{ form.currencyprice }}<br>
-                                        <h6>Цена продажи</h6>
-                                        {{ form.currencysellprice }}<br>
-                                        <h6>Доп расходы</h6>
-                                        {{ form.anyprice }}<br>
-                                        <h6>Дата покупки</h6>
-                                        {{ form.datebuy }}<br>
-                                        <h6>Дата продажи</h6>
-                                        {{ form.datesell }}<br>
-                                        {{ form.notes}}
-                                    </form>
+            </tr>
+            </thead>
+            {% for el in table %}
+
+
+            <tbody>
+            <tr>
+                <td>{{ el.title }} - {{ el.userID }}</td>
+                <td>{{ el.size }}</td>
+                <td>{{ el.currencyprice }} {{ el.currencybuy }}</td>
+                <td>{{ el.currencysellprice }} {{ el.currencybuy }}</td>
+                <td>{{ el.anyprice }} ₽</td>
+                <td>{{ el.datebuy|date:'d.m.Y' }}</td>
+                <td>{{ el.datesell|date:'d.m.Y' }}</td>
+                <td>{{ el.notes }}</td>
+                {% if el.value >= 0 %}
+                <td class="table-success border-dark">{{ el.value }} ₽</td>
+                {% else %}
+                <td class="table-danger border-dark">{{ el.value }} ₽</td>
+                {% endif %}
+                <td align="center">
+                    <a class="btn btn-sm" data-bs-toggle="modal"
+                       data-bs-target="#editModal{{el.id}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                             class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                        </svg>
+                    </a>
+                    <div class="modal fade" id="editModal{{el.id}}" tabindex="-1" aria-labelledby="editModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Edit</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" form="form_edit{{el.id}}" value="edit"
-                                        class="btn btn-primary">
-                                    Edit
-                                </button>
+                                <div class="modal-body">
+                                    <div class="d-flex justify-content-center py-3">
+                                        <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}" name="edit"
+                                              method="post">
+                                            {% csrf_token %}
+                                            <h6>Имя</h6>
+                                            {{ form.title }}<br>
+                                            <h6>Размер</h6>
+                                            {{ form.size }}<br>
+                                            <h6>Цена покупки</h6>
+                                            {{ form.currencyprice }}<br>
+                                            <h6>Цена продажи</h6>
+                                            {{ form.currencysellprice }}<br>
+                                            <h6>Доп расходы</h6>
+                                            {{ form.anyprice }}<br>
+                                            <h6>Дата покупки</h6>
+                                            {{ form.datebuy }}<br>
+                                            <h6>Дата продажи</h6>
+                                            {{ form.datesell }}<br>
+                                            {{ form.notes}}
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                    <button type="submit" form="form_edit{{el.id}}" value="edit"
+                                            class="btn btn-primary">
+                                        Edit
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </td>
-            <td align="center">
+                </td>
+                <td align="center">
 
-                <a class="btn btn-light btn-sm" data-bs-toggle="modal"
-                   data-bs-target="#createMeeting{{el.id}}" title='Meeting'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-clock" viewBox="0 0 16 16">
-                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                    </svg>
-                </a>
+                    <a class="btn btn-sm" data-bs-toggle="modal"
+                       data-bs-target="#createMeeting{{el.id}}" title='Meeting'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-clock" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                        </svg>
+                    </a>
 
-                <div class="modal fade" id="createMeeting{{el.id}}" tabindex="-1" aria-labelledby="createMeetingLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="createMeetingLabel">Meeting</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row">
-                                    <div class="d-flex justify-content-center py-3 col">
-                                        <div class="row">
-                                            <form id="form_create_meeting{{el.id}}"
-                                                  action="{% url 'meeting-create' el.id %}"
-                                                  name="create" method="post">
-                                                {% csrf_token %}
-                                                <h6>Имя</h6>
-                                                {{ meetings_form.title }}<br>
-                                                <h6>Цена продажи</h6>
-                                                {{ meetings_form.sellprice }}<br>
-
-                                                <h6>Дата покупки</h6>
-                                                {{ meetings_form.datemeeting }}<br>
-
-                                                {{ meetings_form.notes}}<br>
-                                            </form>
-                                            <div>
-                                                <button type="submit" form="form_create_meeting{{el.id}}" value="create"
-                                                        class="btn btn-primary">
-                                                    Create
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% if meetings %}
-                                    <div class="d-flex justify-content-center py-3 col">
-                                        <div class="row">
-                                            <form id="form_add_meeting{{el.id}}" action="{% url 'meeting-add' el.id %}"
-                                                  name="add" method="post">
-                                                {% csrf_token %}
-                                                <h6>Цена продажи</h6>
-                                                {{add_item_to_meeting_form.itemsellprice}}<br>
-                                                <h6>Встреча</h6>
-                                                {{add_item_to_meeting_form.meet}}<br>
-                                            </form>
-                                            <div>
-                                                <button type="submit" form="form_add_meeting{{el.id}}" value="add"
-                                                        class="btn btn-primary">
-                                                    Добавить к существующей встрече
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                    <div class="modal fade" id="createMeeting{{el.id}}" tabindex="-1"
+                         aria-labelledby="createMeetingLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="createMeetingLabel">Meeting</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
+                                <div class="modal-body">
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <div class="row">
+                                        <div class="d-flex justify-content-center py-3 col">
+                                            <div class="row">
+                                                <form id="form_create_meeting{{el.id}}"
+                                                      action="{% url 'meeting-create' el.id %}"
+                                                      name="create" method="post">
+                                                    {% csrf_token %}
+                                                    <h6>Имя</h6>
+                                                    {{ meetings_form.title }}<br>
+                                                    <h6>Цена продажи</h6>
+                                                    {{ meetings_form.sellprice }}<br>
 
+                                                    <h6>Дата покупки</h6>
+                                                    {{ meetings_form.datemeeting }}<br>
+
+                                                    {{ meetings_form.notes}}<br>
+                                                </form>
+                                                <div>
+                                                    <button type="submit" form="form_create_meeting{{el.id}}"
+                                                            value="create"
+                                                            class="btn btn-primary">
+                                                        Create
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if meetings %}
+                                        <div class="d-flex justify-content-center py-3 col">
+                                            <div class="row">
+                                                <form id="form_add_meeting{{el.id}}"
+                                                      action="{% url 'meeting-add' el.id %}"
+                                                      name="add" method="post">
+                                                    {% csrf_token %}
+                                                    <h6>Цена продажи</h6>
+                                                    {{add_item_to_meeting_form.itemsellprice}}<br>
+                                                    <h6>Встреча</h6>
+                                                    {{add_item_to_meeting_form.meet}}<br>
+                                                </form>
+                                                <div>
+                                                    <button type="submit" form="form_add_meeting{{el.id}}" value="add"
+                                                            class="btn btn-primary">
+                                                        Добавить к существующей встрече
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </td>
-            <td align="center">
-                <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token %}
-                </form>
-                <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-trash" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd"
-                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                </a>
-                <script>
+                </td>
+                <td align="center">
+                    <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token
+                        %}
+                    </form>
+                    <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                             class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd"
+                                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                        </svg>
+                    </a>
+                    <script>
                         function delete_item(x) {
 
                             document.getElementById('delete_form'+x).submit()
@@ -319,17 +346,18 @@
 
 
 
-                </script>
-            </td>
-        </tr>
-        </tbody>
 
-        {% endfor %}
-    </table>
-    {% endif %}
-</div>
+                    </script>
+                </td>
+            </tr>
+            </tbody>
 
-<script>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
+    <script>
 function tableSearch() {
     var phrase = document.getElementById('search-text');
     var table = document.getElementById('myTable');
@@ -432,8 +460,9 @@ function sortTable(n) {
 
 
 
-</script>
+
+    </script>
 
 
-{% endblock %}
+    {% endblock %}
 
