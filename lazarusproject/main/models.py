@@ -91,7 +91,7 @@ class Table(models.Model):
     currencysell = models.CharField('CurrencySell', max_length=10, choices=CURRENCY_CHOICES, default='rub')
     currencybuy = models.CharField('CurrencyBuy', max_length=10, choices=CURRENCY_CHOICES, default='rub')
     size = models.CharField('Size', max_length=10, choices=US_SIZES, default='NO SIZE')
-    notes = models.CharField('Notes', max_length=255, blank=True, default='')
+    notes = models.TextField('Notes', blank=True, default='')
     meet = models.ForeignKey(Meetings, on_delete=models.SET_NULL, null=True)
     possibleprice = models.OneToOneField(PotentialSellPrice, on_delete=models.SET_NULL, null=True)
 

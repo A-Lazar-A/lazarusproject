@@ -3,9 +3,12 @@
 
 {% block content %}
 {% if table|length != 0 %}
-<div class="row justify-content-end">
+<div class="row justify-content-center">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
-    <div class="col-3 ">
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+
+    <div class="col">
         <figure class="text-center"><h4>Прибыль за неделю</h4></figure>
         {% if week_value >= 0 %}
         <figure class="text-center text-success"><h4>{{ week_value }} ₽</h4></figure>
@@ -14,7 +17,7 @@
         {% endif %}
 
     </div>
-    <div class="col-3 ">
+    <div class="col">
         <figure class="text-center"><h4>Прибыль за месяц</h4></figure>
         {% if month_value >= 0 %}
         <figure class="text-center text-success"><h4>{{ month_value }} ₽</h4></figure>
@@ -23,7 +26,7 @@
         {% endif %}
 
     </div>
-    <div class="col-3 ">
+    <div class="col">
         <figure class="text-center"><h4>Прибыль за год</h4></figure>
         {% if year_value >= 0 %}
         <figure class="text-center text-success"><h4>{{ year_value }} ₽</h4></figure>
@@ -33,7 +36,7 @@
 
     </div>
 
-    <div class="col-3 ">
+    <div class="col">
         <figure class="text-center"><h4>Прибыль за все время</h4></figure>
         {% if sum >= 0 %}
         <figure class="text-center text-success"><h4>{{ sum }} ₽</h4></figure>
@@ -122,7 +125,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="form_create" class="btn btn-primary">Create</button>
             </div>
         </div>
@@ -135,11 +137,11 @@
         Create
     </button>
     {% else %}
-    <div class="container">
+    <div class="container-xl">
         <div class="row">
             <div class="col d-flex justify-content-start py-3">
 
-                <input class="form-control" type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()"
+                <input class="form-control " type="text" placeholder="Поиск" id="search-text" onkeyup="tableSearch()"
                        style="width:170px;">
 
             </div>
@@ -150,7 +152,7 @@
             </div>
         </div>
 
-
+        <div class="table-responsive">
         <table id="myTable" class="table table-bordered border-dark ">
             <thead>
             <tr>
@@ -207,27 +209,64 @@
                                         <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}" name="edit"
                                               method="post">
                                             {% csrf_token %}
-                                            <h6>Имя</h6>
-                                            {{ form.title }}<br>
-                                            <h6>Размер</h6>
-                                            {{ form.size }}<br>
-                                            <h6>Цена покупки</h6>
-                                            {{ form.currencyprice }}<br>
-                                            <h6>Цена продажи</h6>
-                                            {{ form.currencysellprice }}<br>
-                                            <h6>Доп расходы</h6>
-                                            {{ form.anyprice }}<br>
-                                            <h6>Дата покупки</h6>
-                                            {{ form.datebuy }}<br>
-                                            <h6>Дата продажи</h6>
-                                            {{ form.datesell }}<br>
-                                            {{ form.notes}}
+                                            <div class="row">
+                                                <div class="col-auto">
+                                                    <h6>Имя</h6>
+                                                    {{ form.title }}
+                                                </div>
+                                                <div class="col-auto">
+                                                    <h6>Размер</h6>
+                                                    {{ form.size }}
+                                                </div>
+                                                <div class="col">
+                                                    <h6>Дата покупки</h6>
+                                                    {{ form.datebuy }}
+                                                </div>
+                                                <div class="col">
+                                                    <h6>Дата продажи</h6>
+                                                    {{ form.datesell }}
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h6>Цена покупки</h6>
+                                                    <div class="input-group">
+                                                        {{ form.currencyprice }}
+                                                        <div class="input-group-text">{{ form.currencybuy }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <h6>Цена продажи</h6>
+                                                    <div class="input-group">
+                                                        {{ form.currencysellprice }}
+                                                        <div class="input-group-text">{{ form.currencysell }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <h6>Доп расходы</h6>
+
+                                                    <div class="input-group" style="height: 45px">
+                                                        <div class="input-group-text">₽</div>
+                                                        {{ form.anyprice }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h6>Заметки</h6>
+                                                    {{ form.notes}}
+                                                </div>
+
+                                            </div>
+
+
                                         </form>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
-                                    </button>
                                     <button type="submit" form="form_edit{{el.id}}" value="edit"
                                             class="btn btn-primary">
                                         Edit
@@ -321,8 +360,8 @@
                     </div>
                 </td>
                 <td align="center">
-                    <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}" method="post">{% csrf_token
-                        %}
+                    <form id="delete_form{{el.id}}" action="{% url 'item-delete' el.id %}"
+                          method="post">{% csrf_token %}
                     </form>
                     <a href="javascript:void()" onclick="delete_item({{el.id}})" class="btn btn-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -347,6 +386,8 @@
 
 
 
+
+
                     </script>
                 </td>
             </tr>
@@ -354,8 +395,10 @@
 
             {% endfor %}
         </table>
+            </div>
         {% endif %}
     </div>
+
 
     <script>
 function tableSearch() {
@@ -454,6 +497,8 @@ function sortTable(n) {
     }
   }
 }
+
+
 
 
 

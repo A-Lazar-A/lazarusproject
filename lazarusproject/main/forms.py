@@ -1,6 +1,6 @@
 from .models import Table, US_SIZES, CURRENCY_CHOICES, Meetings
 from django import forms
-from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput
+from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput, Textarea
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
@@ -54,9 +54,10 @@ class TableForm(ModelForm):
                 'placeholder': 'Дата продажи',
                 'type': 'date'
             }),
-            "notes": TextInput(attrs={
+            "notes": Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Заметки'
+                'placeholder': 'Заметки',
+                'rows': '1'
             }),
         }
 

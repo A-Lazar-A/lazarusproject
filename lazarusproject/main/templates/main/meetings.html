@@ -14,7 +14,7 @@
 {% else %}
 <div class="container p-3">
 
-    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div class="row row-cols-1 row-cols-lg-3 text-center">
         {% for el in table %}
 
         <div class="col">
@@ -35,6 +35,11 @@
                         function delete_meeting(x) {
                             document.getElementById('delete_meeting'+x).submit()
                         }
+
+
+
+
+
                             </script>
                         </div>
 
@@ -44,19 +49,75 @@
                 <div class="card-body">
                     <h1 class="card-title pricing-card-title">{{ el.sellprice }}</h1>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{el.datemeeting|date }}</li>
-                        <li>На продажу:</li>
-                        {% for item in el.get_item%}
-                        <li>{{item}} - {{item.possibleprice.potentialprice}}₽</li>
-   {%endfor %}
-                        <li>{{el.notes}}</li>
+                        <li>{{el.datemeeting|date }}<br></li>
+                        <li>
+                            <div class="accordion" id="accordionExample{{el.id}}">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne{{el.id}}">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseOne{{el.id}}" aria-expanded="false"
+                                                aria-controls="collapseOne{{el.id}}">
+                                            На продажу
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne{{el.id}}" class="accordion-collapse collapse"
+                                         aria-labelledby="headingOne" >
+                                        <div class="accordion-body">
+                                            <ul class="list-unstyled">
+                                                {% for item in el.get_item%}
+                                                <li><span>{{item}} - {{item.possibleprice.potentialprice}}₽</span>
+                                                </li>
+                                                {%endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo{{el.id}}"
+                                                aria-expanded="false" aria-controls="collapseTwo{{el.id}}">
+                                            Заметки
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo{{el.id}}" class="accordion-collapse collapse"
+                                         aria-labelledby="headingTwo{{el.id}}" >
+                                        <div class="accordion-body">
+                                            {{el.notes}}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!--                            <div class="dropdown">-->
+                            <!--                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"-->
+                            <!--                                        id="dropdownMenuButton{{el.id}}"-->
+                            <!--                                        data-bs-toggle="dropdown" aria-expanded="false">-->
+                            <!--                                    На продажу-->
+                            <!--                                </button>-->
+                            <!--                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{el.id}}">-->
+                            <!--                                    {% for item in el.get_item%}-->
+                            <!--                                    <li><span class="dropdown-item-text">{{item}} - {{item.possibleprice.potentialprice}}₽</span>-->
+                            <!--                                    </li>-->
+                            <!--                                    {%endfor %}-->
+                            <!--                                </ul>-->
+                            <!--                            </div>-->
+                        </li>
+
+
                     </ul>
+
+                </div>
+                <div class="card-footer">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                         <form id="done_meeting{{el.id}}" action="{% url 'meeting-done' el.id %}" method="post">
                             {% csrf_token %}
                         </form>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary" form="done_meeting{{el.id}}">Продано</button>
-                        <button type="submit" class="w-100 btn btn-lg btn-danger" form="delete_meeting{{el.id}}">Отмена</button>
+                        <button type="submit" class="btn btn-lg btn-primary text-nowrap"
+                                form="done_meeting{{el.id}}">
+                            Продано
+                        </button>
                     </div>
                 </div>
             </div>
