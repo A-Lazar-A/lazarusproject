@@ -44,7 +44,7 @@ US_SIZES = (
 class Meetings(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
     title = models.CharField('Name', max_length=100)
-    datemeeting = models.DateField(null=True)
+    datemeeting = models.DateTimeField(null=True)
     sellprice = models.DecimalField(blank=False, null=True, default=0, max_digits=19, decimal_places=2)
     notes = models.CharField('Notes', max_length=255, blank=True, default='')
 

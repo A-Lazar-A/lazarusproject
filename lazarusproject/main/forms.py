@@ -78,7 +78,7 @@ class MeetingForm(ModelForm):
             "datemeeting": DateInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Дата встречи',
-                'type': 'date'
+                'type': 'datetime-local'
             }),
             "notes": TextInput(attrs={
                 'class': 'form-control',

@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <h1 class="card-title pricing-card-title">{{ el.sellprice }}</h1>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>{{el.datemeeting|date }}<br></li>
+                        <li>{{el.datemeeting|date:"DATETIME_FORMAT" }}<br></li>
                         <li>
                             <div class="accordion" id="accordionExample{{el.id}}">
                                 <div class="accordion-item">
