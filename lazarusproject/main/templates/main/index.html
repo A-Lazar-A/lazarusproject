@@ -116,7 +116,6 @@
                                 {{ form.notes}}
                             </div>
                         </div>
-                        <br>
 
 
                     </form>
@@ -164,7 +163,7 @@
                     <th onclick="sortTable(6)" style="cursor: pointer">Дата продажи</th>
                     <th>Заметки</th>
                     <th onclick="sortTable(8)" style="cursor: pointer">Прибыль</th>
-                    <th colspan="3"></th>
+                    <th colspan="4"></th>
 
                 </tr>
                 </thead>
@@ -176,7 +175,7 @@
                     <td>{{ el.title }} - {{ el.userID }}</td>
                     <td>{{ el.size }}</td>
                     <td>{{ el.currencyprice }} {{ el.currencybuy }}</td>
-                    <td>{{ el.currencysellprice }} {{ el.currencybuy }}</td>
+                    <td>{{ el.currencysellprice }} {{ el.currencysell }}</td>
                     <td>{{ el.anyprice }} ₽</td>
                     <td>{{ el.datebuy|date:'d.m.Y' }}</td>
                     <td>{{ el.datesell|date:'d.m.Y' }}</td>
@@ -186,9 +185,72 @@
                     {% else %}
                     <td class="table-danger border-dark">{{ el.value }} ₽</td>
                     {% endif %}
-                    <td align="center">
+
+                    <td><a class="btn btn-sm" data-bs-toggle="modal"
+                           data-bs-target="#soldModal{{el.id}}" title="Sold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-check-lg" viewBox="0 0 16 16">
+                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                        </svg>
+
+                    </a>
+                        <div class="modal fade" id="soldModal{{el.id}}" tabindex="-1" aria-labelledby="soldModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="soldModalLabel">Sold {{el.title}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="d-flex  py-3">
+                                            <form id="form_sold{{el.id}}" action="{% url 'item-sold' el.id %}"
+                                                  name="sold"
+                                                  method="post">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="id_currencysellprice">Цена продажи</label>
+                                                        <div class="input-group">
+                                                            {{ sold_form.currencysellprice }}
+                                                            <div class="input-group-text">{{ form.currencysell }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="id_datesell">Дата продажи</label>
+                                                        {{ sold_form.datesell }}
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="id_notes">Заметки</label>
+                                                        {{ sold_form.notes}}
+                                                    </div>
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" form="form_sold{{el.id}}" value="Sold"
+                                                class="btn btn-primary">
+                                            Sold
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
                         <a class="btn btn-sm" data-bs-toggle="modal"
-                           data-bs-target="#editModal{{el.id}}">
+                           data-bs-target="#editModal{{el.id}}" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
                                  class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
@@ -199,69 +261,66 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel">Edit</h5>
+                                        <h5 class="modal-title" id="editModalLabel">Edit {{el.title}}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="d-flex justify-content-center py-3">
+                                        <div class="d-flex  py-3">
                                             <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}"
                                                   name="edit"
                                                   method="post">
                                                 {% csrf_token %}
-                                                <div class="row">
-                                                    <div class="col-auto">
-                                                        <h6>Имя</h6>
-                                                        {{ form.title }}
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <h6>Размер</h6>
-                                                        {{ form.size }}
+                                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">
+                                                    <div class="col">
+                                                        <label for="id_title">Имя</label>
+                                                        {{ edit_form.title }}
                                                     </div>
                                                     <div class="col">
-                                                        <h6>Дата покупки</h6>
-                                                        {{ form.datebuy }}
+                                                        <label for="id_size">Размер</label>
+                                                        {{ edit_form.size }}
                                                     </div>
                                                     <div class="col">
-                                                        <h6>Дата продажи</h6>
-                                                        {{ form.datesell }}
+                                                        <label for="id_datebuy">Дата покупки</label>
+                                                        {{ edit_form.datebuy }}
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="id_datesell">Дата продажи</label>
+
+                                                        {{ edit_form.datesell }}
                                                     </div>
 
                                                 </div>
                                                 <br>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <h6>Цена покупки</h6>
+                                                <div class="row g-2">
+                                                    <div class="col-6 col-lg-4">
+                                                        <label for="id_currencyprice">Цена покупки</label>
                                                         <div class="input-group">
-                                                            {{ form.currencyprice }}
+                                                            {{ edit_form.currencyprice }}
                                                             <div class="input-group-text">{{ form.currencybuy }}</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <h6>Цена продажи</h6>
+                                                    <div class="col-6 col-lg-4">
+                                                        <label for="id_currencysellprice">Цена продажи</label>
                                                         <div class="input-group">
-                                                            {{ form.currencysellprice }}
+                                                            {{ edit_form.currencysellprice }}
                                                             <div class="input-group-text">{{ form.currencysell }}</div>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <h6>Доп расходы</h6>
+                                                    <div class="col-12 col-lg-4">
 
+                                                        <label for="id_anyprice">Доп расходы</label>
                                                         <div class="input-group" style="height: 45px">
                                                             <div class="input-group-text">₽</div>
-                                                            {{ form.anyprice }}
+                                                            {{ edit_form.anyprice }}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <br>
-                                                <div class="row">
+
                                                     <div class="col">
-                                                        <h6>Заметки</h6>
-                                                        {{ form.notes}}
+                                                        <label for="id_notes">Заметки</label>
+                                                        {{ edit_form.notes}}
                                                     </div>
-
                                                 </div>
-
 
                                             </form>
                                         </div>
@@ -310,7 +369,10 @@
                                                         <h6>Имя</h6>
                                                         {{ meetings_form.title }}<br>
                                                         <h6>Цена продажи</h6>
-                                                        {{ meetings_form.sellprice }}<br>
+                                                        <div class="input-group">
+                                                            {{ meetings_form.price }}
+                                                            <div class="input-group-text">{{ meetings_form.currency }}</div>
+                                                        </div><br>
 
                                                         <h6>Дата покупки</h6>
                                                         {{ meetings_form.datemeeting }}<br>
@@ -334,7 +396,10 @@
                                                           name="add" method="post">
                                                         {% csrf_token %}
                                                         <h6>Цена продажи</h6>
-                                                        {{add_item_to_meeting_form.itemsellprice}}<br>
+                                                        <div class="input-group">
+                                                            {{ add_item_to_meeting_form.price }}
+                                                            <div class="input-group-text">{{ add_item_to_meeting_form.currency }}</div>
+                                                        </div><br><br>
                                                         <h6>Встреча</h6>
                                                         {{add_item_to_meeting_form.meet}}<br>
                                                     </form>
@@ -378,6 +443,9 @@
                             document.getElementById('delete_form'+x).submit()
 
                         }
+
+
+
 
 
 
@@ -499,6 +567,9 @@ function sortTable(n) {
     }
   }
 }
+
+
+
 
 
 

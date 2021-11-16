@@ -3,15 +3,15 @@ from .models import Table, Meetings, PotentialSellPrice
 
 
 class TableAdmin(admin.ModelAdmin):
-    list_display = ('id', 'userID', 'title', 'size', 'price', 'currencybuy', 'sellprice', 'currencysell', 'anyprice', 'datebuy', 'datesell', 'value', 'notes', 'meet', 'possibleprice')
+    list_display = ('id', 'userID', 'title', 'size', 'price', 'currencybuy', 'sellprice', 'currencysellprice', 'anyprice', 'datebuy', 'datesell', 'value', 'notes', 'meet', 'possibleprice')
     list_filter = ('userID', 'title', 'price', 'sellprice', 'datebuy', 'datesell', 'value')
     search_fields = ('userID', 'title', 'datebuy', 'datesell')
 
 
 class MeetingsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'userID', 'title', 'sellprice', 'datemeeting', 'notes')
-    list_filter = ('userID', 'title', 'sellprice', 'datemeeting')
-    search_fields = ('userID', 'title', 'sellprice', 'datemeeting')
+    list_display = ('id', 'userID', 'title', 'sellpricesum', 'datemeeting', 'notes')
+    list_filter = ('userID', 'title', 'sellpricesum', 'datemeeting')
+    search_fields = ('userID', 'title', 'sellpricesum', 'datemeeting')
 
 
 class PotentialSellPriceAdmin(admin.ModelAdmin):

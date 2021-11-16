@@ -14,7 +14,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
 
-from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm
+from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm, TableSoldForm, TableEditForm
 from .models import Table, Meetings, PotentialSellPrice
 
 
@@ -47,9 +47,13 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         dic_sum = Table.objects.filter(userID=self.request.user).aggregate(Sum('value'))
         dic_sum['value__sum'] = None or dic_sum['value__sum'] or 0
         item_form = TableForm(self.request.GET or None)
+        item_edit_form = TableEditForm(self.request.GET or None)
         meetings_form = MeetingForm(self.request.GET or None)
+        sold_form = TableSoldForm(self.request.GET or None)
         add_item_to_meeting_form = AddItemForMeetingForm(self.request.GET or None, username=self.request.user)
         kwargs['form'] = item_form
+        kwargs['edit_form'] = item_edit_form
+        kwargs['sold_form'] = sold_form
         kwargs['meetings_form'] = meetings_form
         kwargs['add_item_to_meeting_form'] = add_item_to_meeting_form
         kwargs['year_value'] = year_value
@@ -60,13 +64,6 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         kwargs['meetings'] = Meetings.objects.filter(userID=self.request.user).exists()
         return super().get_context_data(**kwargs)
 
-    # def get(self, request, *args, **kwargs):
-    #     item_form = TableForm(self.request.GET or None)
-    #     meetings_form = MeetingForm(self.request.GET or None)
-    #     context = self.get_context_data(**kwargs)
-    #     context['form'] = item_form
-    #     context['meetings_form'] = meetings_form
-    #     return self.render_to_response(context)
 
 
 class MeetingsListView(LoginRequiredMixin, ListView):
@@ -90,25 +87,22 @@ class ItemFormView(LoginRequiredMixin, FormView):
             object = form.save(commit=False)
             object.price = object.currencyprice
             object.sellprice = object.currencysellprice
-            if object.currencybuy != '₽':
-                client = Spot(key='key',
-                              secret='secret')
+            if object.currencysell != '₽':
+                client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                              secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
                 if object.currencybuy == '$':
                     object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
-                elif object.currencybuy == '€':
-                    object.sellprice *= Decimal(client.ticker_price('EURRUB')['price'])
+
                 elif object.currencybuy == 'SOL':
                     object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
                 elif object.currencybuy == 'ETH':
                     object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
 
-            if object.currencysell != '₽':
+            if object.currencybuy != '₽':
                 client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
                               secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
                 if object.currencybuy == '$':
                     object.price *= Decimal(client.ticker_price('USDTRUB')['price'])
-                elif object.currencybuy == '€':
-                    object.price *= Decimal(client.ticker_price('EURRUB')['price'])
                 elif object.currencybuy == 'SOL':
                     object.price *= Decimal(client.ticker_price('SOLRUB')['price'])
                 elif object.currencybuy == 'ETH':
@@ -129,13 +123,26 @@ class MeetingsFormView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.userID = self.request.user
-        it = Table.objects.get(id=self.kwargs['pk'])
+        item = Table.objects.get(id=self.kwargs['pk'])
+        price = form.cleaned_data['price']
+        currency = form.cleaned_data['currency']
+
+        if currency != '₽':
+            client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                          secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+            if currency == '$':
+                price *= Decimal(client.ticker_price('USDTRUB')['price'])
+            elif currency == 'SOL':
+                price *= Decimal(client.ticker_price('SOLRUB')['price'])
+            elif currency == 'ETH':
+                price *= Decimal(client.ticker_price('ETHRUB')['price'])
+        self.object.sellpricesum = price
         self.object.save()
-        it.meet = self.object
-        pps = PotentialSellPrice(userID=self.request.user, potentialprice=self.object.sellprice)
+        item.meet = self.object
+        pps = PotentialSellPrice(userID=self.request.user, potentialprice=self.object.sellpricesum)
         pps.save()
-        it.possibleprice = pps
-        it.save()
+        item.possibleprice = pps
+        item.save()
         return super().form_valid(form)
 
 
@@ -153,11 +160,21 @@ class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        sell = form.cleaned_data["itemsellprice"]
-        pps = PotentialSellPrice(userID=self.request.user, potentialprice=sell)
+        price = form.cleaned_data["price"]
+        currency = form.cleaned_data['currency']
+        if currency != '₽':
+            client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                          secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+            if currency == '$':
+                price *= Decimal(client.ticker_price('USDTRUB')['price'])
+            elif currency == 'SOL':
+                price *= Decimal(client.ticker_price('SOLRUB')['price'])
+            elif currency == 'ETH':
+                price *= Decimal(client.ticker_price('ETHRUB')['price'])
+        pps = PotentialSellPrice(userID=self.request.user, potentialprice=price)
         pps.save()
         self.object.possibleprice = pps
-        self.object.meet.sellprice += sell
+        self.object.meet.sellpricesum += price
         self.object.meet.save()
         self.object.save()
 
@@ -178,8 +195,8 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
         items = Table.objects.filter(meet=self.object)
         for item in items:
             item.datesell = self.object.datemeeting
-            item.sellprice = item.possibleprice.potentialprice
-            item.value = item.sellprice - item.price - item.anyprice
+            item.currencysellprice = item.possibleprice.potentialprice
+            item.value = item.currencysellprice - item.price - item.anyprice
             item.possibleprice.delete()
             item.possibleprice = None
             item.save()
@@ -202,59 +219,6 @@ class MeetingDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-# class ItemCreateView(LoginRequiredMixin, CreateView):
-#     login_url = reverse_lazy('login')
-#     model = Table
-#     template_name = 'main/index.html'
-#     form_class = TableForm
-#     success_url = reverse_lazy('inventory')
-#
-#     def form_valid(self, form):
-#         self.object = form.save(commit=False)
-#         self.object.userID = self.request.user
-#         self.object.value = self.object.sellprice - self.object.price
-#         self.object.save()
-#         return super().form_valid(form)
-#
-#     def get_context_data(self, **kwargs):
-#         last_year = timezone.now().date() - timedelta(days=365)
-#         last_month = timezone.now().date() - timedelta(days=30)
-#         some_day_last_week = timezone.now().date() - timedelta(days=7)
-#         year_sum = Table.objects.filter(datesell__gte=last_year, userID=self.request.user).aggregate(Sum('sellprice'))
-#         if year_sum['sellprice__sum'] is None:
-#             year_sum['sellprice__sum'] = 0
-#         week_sum = Table.objects.filter(datesell__gte=some_day_last_week, userID=self.request.user).aggregate(
-#             Sum('sellprice'))
-#         if week_sum['sellprice__sum'] is None:
-#             week_sum['sellprice__sum'] = 0
-#         month_sum = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).aggregate(Sum('sellprice'))
-#         if month_sum['sellprice__sum'] is None:
-#             month_sum['sellprice__sum'] = 0
-#         year_sum_b = Table.objects.filter(datebuy__gte=last_year, userID=self.request.user).aggregate(Sum('price'))
-#         if year_sum_b['price__sum'] is None:
-#             year_sum_b['price__sum'] = 0
-#         week_sum_b = Table.objects.filter(datebuy__gte=some_day_last_week, userID=self.request.user).aggregate(
-#             Sum('price'))
-#         if week_sum_b['price__sum'] is None:
-#             week_sum_b['price__sum'] = 0
-#         month_sum_b = Table.objects.filter(datebuy__gte=last_month, userID=self.request.user).aggregate(Sum('price'))
-#         if month_sum_b['price__sum'] is None:
-#             month_sum_b['price__sum'] = 0
-#         year_value = year_sum['sellprice__sum'] - year_sum_b['price__sum']
-#         month_value = month_sum['sellprice__sum'] - month_sum_b['price__sum']
-#         week_value = week_sum['sellprice__sum'] - week_sum_b['price__sum']
-#         dic_sum = Table.objects.filter(userID=self.request.user).aggregate(Sum('value'))
-#         if dic_sum['value__sum'] is None:
-#             dic_sum['value__sum'] = 0
-#
-#         kwargs['year_value'] = year_value
-#         kwargs['month_value'] = month_value
-#         kwargs['week_value'] = week_value
-#         kwargs['sum'] = dic_sum['value__sum']
-#         kwargs['table'] = Table.objects.order_by('-id')
-#         print(kwargs)
-#         return super().get_context_data(**kwargs)
-
 
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
     login_url = 'login'
@@ -275,12 +239,59 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
     login_url = 'login'
     model = Table
     template_name = 'main/index.html'
-    form_class = TableForm
+    form_class = TableEditForm
     success_url = reverse_lazy('inventory')
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.userID = self.request.user
+        object = form.save(commit=False)
+        object.price = object.currencyprice
+        object.sellprice = object.currencysellprice
+        if object.currencysell != '₽':
+            client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                          secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+            if object.currencybuy == '$':
+                object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
+
+            elif object.currencybuy == 'SOL':
+                object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
+            elif object.currencybuy == 'ETH':
+                object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
+
+        if object.currencybuy != '₽':
+            client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                          secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+            if object.currencybuy == '$':
+                object.price *= Decimal(client.ticker_price('USDTRUB')['price'])
+            elif object.currencybuy == 'SOL':
+                object.price *= Decimal(client.ticker_price('SOLRUB')['price'])
+            elif object.currencybuy == 'ETH':
+                object.price *= Decimal(client.ticker_price('ETHRUB')['price'])
+        object.userID = self.request.user
+        object.value = object.sellprice - object.price - object.anyprice
+        object.save()
+        return super().form_valid(form)
+
+
+class ItemSoldView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    model = Table
+    template_name = 'main/index.html'
+    form_class = TableSoldForm
+    success_url = reverse_lazy('inventory')
+
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.sellprice = object.currencysellprice
+        if object.currencysell != '₽':
+            client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                          secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+            if object.currencybuy == '$':
+                object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
+            elif object.currencybuy == 'SOL':
+                object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
+            elif object.currencybuy == 'ETH':
+                object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
+        object.userID = self.request.user
         self.object.value = self.object.sellprice - self.object.price - self.object.anyprice
         self.object.save()
         return super().form_valid(form)

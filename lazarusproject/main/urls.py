@@ -12,6 +12,7 @@ urlpatterns = [
     path('statistic', views.StatisticView.as_view(), name='statistic'),
     path('delete/<int:pk>', views.ItemDeleteView.as_view(), name='item-delete'),
     path('edit/<int:pk>', views.ItemUpdateView.as_view(), name='item-edit'),
+    path('sold/<int:pk>', views.ItemSoldView.as_view(), name='item-sold'),
     path('meeting-create/<int:pk>', views.MeetingsFormView.as_view(), name='meeting-create'),
     path('meeting-add/<int:pk>', views.AddItemForMeetingFormView.as_view(), name='meeting-add'),
     path('meeting-done/<int:pk>', views.GoodMeetingDeleteView.as_view(), name='meeting-done'),

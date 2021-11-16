@@ -6,14 +6,15 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
 class TableForm(ModelForm):
-    extra = forms.IntegerField(required=True,initial='1', min_value=1, widget=forms.NumberInput(attrs={
+    extra = forms.IntegerField(required=True, initial='1', min_value=1, widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Кол-во'
     }))
 
     class Meta:
         model = Table
-        fields = ["userID", "title", "size", "currencyprice", "currencybuy", "currencysell", "currencysellprice", "anyprice", "datebuy", "datesell", "notes"]
+        fields = ["userID", "title", "size", "currencyprice", "currencybuy", "currencysell", "currencysellprice",
+                  "anyprice", "datebuy", "datesell", "notes"]
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',
@@ -62,18 +63,108 @@ class TableForm(ModelForm):
         }
 
 
+class TableEditForm(ModelForm):
+    class Meta:
+        model = Table
+        fields = ["userID", "title", "size", "currencyprice", "currencybuy", "currencysell", "currencysellprice",
+                  "anyprice", "datebuy", "datesell", "notes"]
+        widgets = {
+            "title": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Model Name',
+            }),
+            "size": Select(choices=US_SIZES, attrs={
+                'class': 'form-select',
+                'aria-label': '.form-select-lg example',
+                'placeholder': 'Model Size'
+            }),
+            "currencyprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Model Price'
+            }),
+            "currencybuy": Select(choices=CURRENCY_CHOICES, attrs={
+                'class': 'form-select form-select-sm',
+                'placeholder': 'Model Currency'
+            }),
+            "currencysell": Select(choices=CURRENCY_CHOICES, attrs={
+                'class': 'form-select form-select-sm ',
+                'placeholder': 'Model Currency'
+            }),
+            "currencysellprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Model Sell Price'
+            }),
+            "anyprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Доп расходы'
+            }),
+            "datebuy": DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Дата покупки',
+                'type': 'date'
+            }),
+            "datesell": DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Дата продажи',
+                'type': 'date'
+            }),
+            "notes": Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Заметки',
+                'rows': '1'
+            }),
+        }
+
+
+class TableSoldForm(ModelForm):
+    class Meta:
+        model = Table
+        fields = ["userID", "currencysell", "currencysellprice",
+                  "datesell", "notes"]
+        widgets = {
+
+            "currencysell": Select(choices=CURRENCY_CHOICES, attrs={
+                'class': 'form-select form-select-sm ',
+                'placeholder': 'Model Currency'
+            }),
+            "currencysellprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Model Sell Price'
+            }),
+            "anyprice": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Доп расходы'
+            }),
+            "datesell": DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Дата продажи',
+                'type': 'date'
+            }),
+            "notes": Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Заметки',
+                'rows': '1'
+            }),
+        }
+
+
 class MeetingForm(ModelForm):
+    price = forms.DecimalField(required=True, initial='0', min_value=0, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Цена'
+    }))
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, widget=forms.Select(attrs={
+        'class': 'form-select form-select-sm ',
+        'placeholder': 'Model Currency'
+    }))
+
     class Meta:
         model = Meetings
-        fields = ['title', 'datemeeting', 'sellprice', 'notes']
+        fields = ['title', 'datemeeting', 'notes']
         widgets = {
             "title": TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Name'
-            }),
-            "sellprice": NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Model Sell Price'
             }),
             "datemeeting": DateInput(attrs={
                 'class': 'form-control',
@@ -88,10 +179,14 @@ class MeetingForm(ModelForm):
 
 
 class AddItemForMeetingForm(ModelForm):
-
-    itemsellprice = forms.DecimalField(required=True, initial='0', min_value=0, widget=forms.NumberInput(attrs={
+    price = forms.DecimalField(required=True, initial='0', min_value=0, widget=forms.NumberInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Кол-во'}))
+        'placeholder': 'Цена'
+    }))
+    currency = forms.ChoiceField(choices=CURRENCY_CHOICES, widget=forms.Select(attrs={
+        'class': 'form-select form-select-sm ',
+        'placeholder': 'Model Currency'
+    }))
 
     def __init__(self, *args, **kwargs):
         self.username = kwargs.pop('username')
@@ -101,13 +196,14 @@ class AddItemForMeetingForm(ModelForm):
 
     class Meta:
         model = Table
-        fields = ['meet', 'itemsellprice']
+        fields = ['meet']
         widgets = {
             "meet": Select(attrs={
                 'class': 'form-select',
                 'aria-label': '.form-select-lg example',
-            })}
+            }),
 
+        }
 
 
 class SignUpForm(ModelForm):
