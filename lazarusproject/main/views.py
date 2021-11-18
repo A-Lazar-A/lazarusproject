@@ -90,12 +90,11 @@ class ItemFormView(LoginRequiredMixin, FormView):
             if object.currencysell != '₽':
                 client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
                               secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
-                if object.currencybuy == '$':
+                if object.currencysell == '$':
                     object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
-
-                elif object.currencybuy == 'SOL':
+                elif object.currencysell == 'SOL':
                     object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
-                elif object.currencybuy == 'ETH':
+                elif object.currencysell == 'ETH':
                     object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
 
             if object.currencybuy != '₽':
@@ -249,12 +248,12 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
         if object.currencysell != '₽':
             client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
                           secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
-            if object.currencybuy == '$':
+            if object.currencysell == '$':
                 object.sellprice *= Decimal(client.ticker_price('USDTRUB')['price'])
 
-            elif object.currencybuy == 'SOL':
+            elif object.currencysell == 'SOL':
                 object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
-            elif object.currencybuy == 'ETH':
+            elif object.currencysell == 'ETH':
                 object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
 
         if object.currencybuy != '₽':
