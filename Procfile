@@ -1,1 +1,1 @@
-web: gunicorn lazarusproject.wsgi
+web: gunicorn lazarusproject/lazarusproject.wsgi
