@@ -17,6 +17,6 @@ urlpatterns = [
     path('meeting-add/<int:pk>', views.AddItemForMeetingFormView.as_view(), name='meeting-add'),
     path('meeting-done/<int:pk>', views.GoodMeetingDeleteView.as_view(), name='meeting-done'),
     path('meeting-delete/<int:pk>', views.MeetingDeleteView.as_view(), name='meeting-delete'),
-    path('delivery', views.DeliveryView.as_view(), name='delivery'),
+    # path('delivery', views.DeliveryView.as_view(), name='delivery'),
     path('meetings', views.MeetingsListView.as_view(), name='meetings')
 ]

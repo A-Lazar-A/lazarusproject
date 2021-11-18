@@ -2,6 +2,7 @@
 
 
 {% block content %}
+{% load widget_tweaks %}
 {% if table|length != 0 %}
 <div class="row justify-content-center">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
@@ -199,7 +200,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="soldModalLabel">Sold {{el.title}}</h5>
+                                        <h5 class="modal-title" id="soldModalLabel">Продать {{el.title}}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
@@ -222,7 +223,7 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <label for="id_datesell">Дата продажи</label>
-                                                        {{ sold_form.datesell }}
+                                                        {{ sold_form.datesell|add_class:"datesell_sold" }}
                                                     </div>
                                                 </div>
                                                 <br>
@@ -235,6 +236,7 @@
 
 
                                             </form>
+
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -374,7 +376,7 @@
                                                             <div class="input-group-text">{{ meetings_form.currency }}</div>
                                                         </div><br>
 
-                                                        <h6>Дата покупки</h6>
+                                                        <h6>Дата продажи</h6>
                                                         {{ meetings_form.datemeeting }}<br>
 
                                                         {{ meetings_form.notes}}<br>
@@ -455,7 +457,13 @@
         {% endif %}
     </div>
 
+<script>
+let dates = document.getElementsByClassName('datesell_sold');
+for (let date of dates){
 
+date.valueAsDate = new Date();
+}
+</script>
     <script>
 function tableSearch() {
     var phrase = document.getElementById('search-text');

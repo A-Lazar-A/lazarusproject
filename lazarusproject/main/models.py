@@ -45,7 +45,7 @@ class Meetings(models.Model):
     title = models.CharField('Name', max_length=100)
     datemeeting = models.DateTimeField(null=True)
     sellpricesum = models.DecimalField(blank=False, null=True, default=0, max_digits=19, decimal_places=2)
-    notes = models.CharField('Notes', max_length=255, blank=True, default='')
+    notes = models.TextField('Notes', blank=True, default='')
 
     def get_item(self):
         return Table.objects.filter(meet=self)

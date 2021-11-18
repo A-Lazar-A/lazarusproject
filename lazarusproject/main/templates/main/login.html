@@ -8,8 +8,8 @@
         <h1>Вход</h1>
         <form id="login" method="post">
             {% csrf_token %}
-            {{ form }}
-            <button type="submit" class="btn btn-primary mt-4">Вход</button>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Вход</button>
         </form>
 
     </div>

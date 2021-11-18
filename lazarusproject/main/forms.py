@@ -171,7 +171,7 @@ class MeetingForm(ModelForm):
                 'placeholder': 'Дата встречи',
                 'type': 'datetime-local'
             }),
-            "notes": TextInput(attrs={
+            "notes": Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Заметки'
             }),

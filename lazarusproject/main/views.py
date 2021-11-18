@@ -310,7 +310,7 @@ class UserLoginView(LoginView):
 
 class UserRegisterView(CreateView):
     model = User
-    template_name = 'main/sing-up.html'
+    template_name = 'main/sign-up.html'
     form_class = SignUpForm
     success_url = reverse_lazy('inventory')
 
@@ -352,6 +352,10 @@ class StatisticView(LoginRequiredMixin, TemplateView):
         q_year = Table.objects.filter(datesell__gte=last_year, userID=self.request.user).order_by('datesell')
         q_month = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).order_by('datesell')
         q_week = Table.objects.filter(datesell__gte=last_week, userID=self.request.user).order_by('datesell')
+        # purchases = Table.objects.filter(datebuy__isnull=False, userID=self.request.user).order_by('datebuy')
+        # purchases_year = Table.objects.filter(datebuy__gte=last_year, userID=self.request.user).order_by('datebuy')
+        # purchases_month = Table.objects.filter(datebuy__gte=last_month, userID=self.request.user).order_by('datebuy')
+        # purchases_week = Table.objects.filter(datebuy__gte=last_week, userID=self.request.user).order_by('datebuy')
         for i in q:
             if i.datesell.strftime('%d.%m.%Y') not in labels:
                 labels.append(i.datesell.strftime('%d.%m.%Y'))
@@ -359,25 +363,24 @@ class StatisticView(LoginRequiredMixin, TemplateView):
             else:
                 sellprice[labels.index(i.datesell.strftime('%d.%m.%Y'))] += float(i.sellprice - i.price - i.anyprice)
         for i in q_year:
-            if i.datesell.strftime('%B') not in labels:
+            if i.datesell.strftime('%B') not in year_labels:
                 year_labels.append(i.datesell.strftime('%B'))
                 year_income.append(float(i.sellprice - i.price - i.anyprice))
             else:
-                year_labels[labels.index(i.datesell.strftime('%B'))] += float(i.sellprice - i.price - i.anyprice)
+                year_income[year_labels.index(i.datesell.strftime('%B'))] += float(i.sellprice - i.price - i.anyprice)
         for i in q_month:
-            if i.datesell.strftime('%d %B') not in labels:
+            if i.datesell.strftime('%d %B') not in month_labels:
                 month_labels.append(i.datesell.strftime('%d %B'))
                 month_income.append(float(i.sellprice - i.price - i.anyprice))
             else:
-                month_labels[labels.index(i.datesell.strftime('%d %B'))] += float(i.sellprice - i.price - i.anyprice)
+                month_income[month_labels.index(i.datesell.strftime('%d %B'))] += float(i.sellprice - i.price - i.anyprice)
         for i in q_week:
-            if i.datesell.strftime('%d %B') not in labels:
+            if i.datesell.strftime('%d %B') not in week_labels:
                 week_labels.append(i.datesell.strftime('%d %B'))
                 week_income.append(float(i.sellprice - i.price - i.anyprice))
             else:
-                week_labels[labels.index(i.datesell.strftime('%d %B'))] += float(i.sellprice - i.price - i.anyprice)
+                week_income[week_labels.index(i.datesell.strftime('%d %B'))] += float(i.sellprice - i.price - i.anyprice)
 
-        print(labels, sellprice, q)
         kwargs['week_dates'] = week_labels
         kwargs['week_income'] = week_income
         kwargs['month_dates'] = month_labels
