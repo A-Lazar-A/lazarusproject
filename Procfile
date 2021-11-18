@@ -1,1 +1,1 @@
-web: gunicorn lazarusproject/lazarusproject.wsgi
+web: gunicorn --chdir lazarusproject lazarusproject.wsgi
