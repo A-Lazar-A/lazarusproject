@@ -44,16 +44,16 @@
                         <div class="row d-flex align-items-center">
                             {% if request.user.is_authenticated %}
                             <div class="col"><span class="align-middle">{{ request.user }}</span></div>
-                            <div class="col"><a type="button" href="{% url 'logout' %}" class="btn btn-danger">Выход</a></div>
+                            <div class="col"><a  href="{% url 'logout' %}" class="btn btn-danger">Выход</a></div>
 
 
                             {% else %}
                             <div class="row">
                                 <div class="col-5">
-                                    <a type="button" href="{% url 'login' %}" class="btn btn-outline-primary me-2">Войти</a>
+                                    <a  href="{% url 'login' %}" class="btn btn-outline-primary me-2">Войти</a>
                                 </div>
                                 <div class="col-7">
-                                    <a type="button" href="{% url 'sign-up' %}" class="btn btn-primary">Регистрация</a>
+                                    <a  href="{% url 'sign-up' %}" class="btn btn-primary">Регистрация</a>
                                 </div>
                             </div>
 
