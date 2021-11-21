@@ -335,7 +335,6 @@
 
 
                     </form>
-                    <script>document.getElementById('id_datebuy').valueAsDate = new Date();</script>
                 </div>
             </div>
             <div class="modal-footer">
@@ -468,17 +467,7 @@
         {% endif %}
     </div>
 
-    <script>
-let dates = document.getElementsByClassName('datesell_sold');
-for (let date of dates){
 
-date.valueAsDate = new Date();
-}
-
-
-
-
-    </script>
     <script>
 function tableSearch() {
     var phrase = document.getElementById('search-text');

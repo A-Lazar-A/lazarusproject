@@ -27,7 +27,8 @@ class TableForm(ModelForm):
             }),
             "currencyprice": NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Model Price'
+                'placeholder': 'Model Price',
+                'min': '0'
             }),
             "currencybuy": Select(choices=CURRENCY_CHOICES, attrs={
                 'class': 'form-select form-select-sm',

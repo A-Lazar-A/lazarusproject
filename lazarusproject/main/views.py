@@ -17,6 +17,7 @@ from django.views.generic import DeleteView, UpdateView, CreateView, TemplateVie
 from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm, TableSoldForm, TableEditForm
 from .models import Table, Meetings, PotentialSellPrice
 
+from datetime import date
 
 class MainTemplateView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
@@ -34,6 +35,13 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         week_sum['sellprice__sum'] = None or week_sum['sellprice__sum'] or 0
         month_sum = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).aggregate(Sum('sellprice'))
         month_sum['sellprice__sum'] = None or month_sum['sellprice__sum'] or 0
+        year_sum_any = Table.objects.filter(datesell__gte=last_year, userID=self.request.user).aggregate(Sum('anyprice'))
+        year_sum_any['anyprice__sum'] = None or year_sum_any['anyprice__sum'] or 0
+        week_sum_any = Table.objects.filter(datesell__gte=some_day_last_week, userID=self.request.user).aggregate(
+            Sum('anyprice'))
+        week_sum_any['anyprice__sum'] = None or week_sum_any['anyprice__sum'] or 0
+        month_sum_any = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).aggregate(Sum('anyprice'))
+        month_sum_any['anyprice__sum'] = None or month_sum_any['anyprice__sum'] or 0
         year_sum_b = Table.objects.filter(datebuy__gte=last_year, userID=self.request.user).aggregate(Sum('price'))
         year_sum_b['price__sum'] = None or year_sum_b['price__sum'] or 0
         week_sum_b = Table.objects.filter(datebuy__gte=some_day_last_week, userID=self.request.user).aggregate(
@@ -41,15 +49,15 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         week_sum_b['price__sum'] = None or week_sum_b['price__sum'] or 0
         month_sum_b = Table.objects.filter(datebuy__gte=last_month, userID=self.request.user).aggregate(Sum('price'))
         month_sum_b['price__sum'] = None or month_sum_b['price__sum'] or 0
-        year_value = year_sum['sellprice__sum'] - year_sum_b['price__sum']
-        month_value = month_sum['sellprice__sum'] - month_sum_b['price__sum']
-        week_value = week_sum['sellprice__sum'] - week_sum_b['price__sum']
+        year_value = year_sum['sellprice__sum'] - year_sum_b['price__sum'] - year_sum_any['anyprice__sum']
+        month_value = month_sum['sellprice__sum'] - month_sum_b['price__sum'] - month_sum_any['anyprice__sum']
+        week_value = week_sum['sellprice__sum'] - week_sum_b['price__sum'] - week_sum_any['anyprice__sum']
         dic_sum = Table.objects.filter(userID=self.request.user).aggregate(Sum('value'))
         dic_sum['value__sum'] = None or dic_sum['value__sum'] or 0
-        item_form = TableForm(self.request.GET or None)
+        item_form = TableForm(self.request.GET or None, initial={'datebuy': date.today().strftime("%Y-%m-%d")})
         item_edit_form = TableEditForm(self.request.GET or None)
         meetings_form = MeetingForm(self.request.GET or None)
-        sold_form = TableSoldForm(self.request.GET or None)
+        sold_form = TableSoldForm(self.request.GET or None, initial={'datesell': date.today().strftime("%Y-%m-%d")})
         add_item_to_meeting_form = AddItemForMeetingForm(self.request.GET or None, username=self.request.user)
         kwargs['form'] = item_form
         kwargs['edit_form'] = item_edit_form
