@@ -6,7 +6,7 @@ from datetime import date
 
 CURRENCY_CHOICES = (
         ('₽', '₽'),
-        ('$', '$'),
+        ('BUSD', 'BUSD'),
         ('SOL', 'SOL'),
         ('ETH', 'ETH')
     )
@@ -39,6 +39,7 @@ US_SIZES = (
     ('14.5', '14.5 US'),
     ('15', '15 US')
 )
+
 
 class Meetings(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User ID', blank=True, null=True)
