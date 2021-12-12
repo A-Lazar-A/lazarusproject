@@ -186,7 +186,11 @@
 <div class="modal fade" id="createMeeting{{el.id}}" tabindex="-1"
      aria-labelledby="createMeetingLabel"
      aria-hidden="true">
+    {%if meetings%}
+    <div class="modal-dialog modal-lg">
+    {%else%}
     <div class="modal-dialog">
+    {%endif%}
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createMeetingLabel">Встреча</h5>
@@ -217,7 +221,7 @@
 
                                 {{ meetings_form.notes}}<br>
                             </form>
-                            <div>
+                            <div class="col d-flex justify-content-center">
                                 <button type="submit" form="form_create_meeting{{el.id}}"
                                         value="create"
                                         class="btn btn-primary">
@@ -228,7 +232,7 @@
                     </div>
                     {% if meetings %}
                     <div class="d-flex justify-content-center py-3 col">
-                        <div class="row">
+                        <div>
                             <form id="form_add_meeting{{el.id}}"
                                   action="{% url 'meeting-add' el.id %}"
                                   name="add" method="post">
@@ -241,9 +245,9 @@
                                 </div>
                                 <br><br>
                                 <h6>Встреча</h6>
-                                {{add_item_to_meeting_form.meet}}<br>
+                                {{add_item_to_meeting_form.meet}}
                             </form>
-                            <div>
+                            <div class="col d-flex justify-content-center py-3">
                                 <button type="submit" form="form_add_meeting{{el.id}}"
                                         value="add"
                                         class="btn btn-primary">
