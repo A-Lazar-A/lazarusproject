@@ -292,11 +292,11 @@ class ItemSoldView(LoginRequiredMixin, UpdateView):
         if object.currencysell != '₽':
             client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
                           secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
-            if object.currencybuy == 'BUSD':
+            if object.currencysell == 'BUSD':
                 object.sellprice *= Decimal(client.ticker_price('BUSDRUB')['price'])
-            elif object.currencybuy == 'SOL':
+            elif object.currencysell == 'SOL':
                 object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
-            elif object.currencybuy == 'ETH':
+            elif object.currencysell == 'ETH':
                 object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
         object.userID = self.request.user
         self.object.value = self.object.sellprice - self.object.price - self.object.anyprice
