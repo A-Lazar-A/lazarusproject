@@ -14,7 +14,9 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DeleteView, UpdateView, CreateView, TemplateView, FormView, ListView
 
-from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm, TableSoldForm, TableEditForm
+
+from .forms import TableForm, AuthUserForm, SignUpForm, MeetingForm, AddItemForMeetingForm, TableSoldForm, \
+    TableEditForm, edit_form_set
 from .models import Table, Meetings, PotentialSellPrice
 
 from datetime import date
@@ -59,6 +61,8 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         meetings_form = MeetingForm(self.request.GET or None)
         sold_form = TableSoldForm(self.request.GET or None, initial={'datesell': date.today().strftime("%Y-%m-%d")})
         add_item_to_meeting_form = AddItemForMeetingForm(self.request.GET or None, username=self.request.user)
+
+        kwargs['modelformset'] = edit_form_set(queryset=Table.objects.filter(userID=self.request.user).order_by('-id'))
         kwargs['form'] = item_form
         kwargs['edit_form'] = item_edit_form
         kwargs['sold_form'] = sold_form
@@ -72,6 +76,40 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
         kwargs['meetings'] = Meetings.objects.filter(userID=self.request.user).exists()
         return super().get_context_data(**kwargs)
 
+    def post(self, request, *args, **kwargs):
+        formset = edit_form_set(request.POST)
+        if formset.is_valid():
+            return self.form_valid(formset)
+
+    def form_valid(self, form):
+        objects = form.save(commit=False)
+        for object in objects:
+            object.price = object.currencyprice
+            object.sellprice = object.currencysellprice
+            if object.currencysell != '₽':
+                client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                              secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+                if object.currencysell == 'BUSD':
+                    object.sellprice *= Decimal(client.ticker_price('BUSDRUB')['price'])
+
+                elif object.currencysell == 'SOL':
+                    object.sellprice *= Decimal(client.ticker_price('SOLRUB')['price'])
+                elif object.currencysell == 'ETH':
+                    object.sellprice *= Decimal(client.ticker_price('ETHRUB')['price'])
+
+            if object.currencybuy != '₽':
+                client = Spot(key='GvmucOiF2eSkzMoQ7J8hBe4ry9nY6UYs5SvsPxcHKW5SmcxDwHZhuoTkTLcwcNaE',
+                              secret='MlNv5KlRnS6mHtRdQns75zJv1FQjfVs2qNj9ZAlENfKvas5BAcvNtq8bOea2fhMP')
+                if object.currencybuy == 'BUSD':
+                    object.price *= Decimal(client.ticker_price('BUSDRUB')['price'])
+                elif object.currencybuy == 'SOL':
+                    object.price *= Decimal(client.ticker_price('SOLRUB')['price'])
+                elif object.currencybuy == 'ETH':
+                    object.price *= Decimal(client.ticker_price('ETHRUB')['price'])
+            object.userID = self.request.user
+            object.value = object.sellprice - object.price - object.anyprice
+            object.save()
+        return HttpResponseRedirect('/inventory/')
 
 
 class MeetingsListView(LoginRequiredMixin, ListView):

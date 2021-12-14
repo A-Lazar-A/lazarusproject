@@ -4,6 +4,11 @@
 {% block content %}
 {% load widget_tweaks %}
 {% if table|length != 0 %}
+
+
+{% for q in modelformset %}
+
+{%endfor%}
 <div class="row justify-content-center">
     <figure class="text-center"><h1>Инвентарь с покупками</h1></figure>
 </div>
@@ -51,6 +56,89 @@
 </div>
 {%endif%}
 <!-- Button trigger modal -->
+{{ modelformset.management_form}}
+{% for el in modelformset %}
+<div class="modal fade" id="editModal{{forloop.counter}}" tabindex="-1" aria-labelledby="editModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Изменить</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex  py-3">
+                    <form id="form_edit{{forloop.counter}}" action=""
+                          name="edit"
+                          method="post">
+                        {% csrf_token %}
+
+                        {{ el.id }}
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">
+                            <div class="col">
+                                <label for="id_title">Имя</label>
+                                {{ el.title }}
+                            </div>
+                            <div class="col">
+                                <label for="id_size">Размер</label>
+                                {{ el.size }}
+                            </div>
+                            <div class="col">
+                                <label for="id_datebuy">Дата покупки</label>
+                                {{ el.datebuy }}
+                            </div>
+                            <div class="col">
+                                <label for="id_datesell">Дата продажи</label>
+
+                                {{ el.datesell }}
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col-6 col-lg-4">
+                                <label for="id_currencyprice">Цена покупки</label>
+                                <div class="input-group">
+                                    {{ el.currencyprice }}
+                                    <div class="input-group-text">{{ el.currencybuy }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-4">
+                                <label for="id_currencysellprice">Цена продажи</label>
+                                <div class="input-group">
+                                    {{ el.currencysellprice }}
+                                    <div class="input-group-text">{{ el.currencysell }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4">
+
+                                <label for="id_anyprice">Доп расходы</label>
+                                <div class="input-group" style="height: 45px">
+                                    <div class="input-group-text">₽</div>
+                                    {{ el.anyprice }}
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <label for="id_notes">Заметки</label>
+                                {{ el.notes}}
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="form_edit{{forloop.counter}}" value="edit"
+                        class="btn btn-primary">
+                    Изменить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{%endfor%}
 {% for el in table %}
 <div class="modal fade" id="soldModal{{el.id}}" tabindex="-1" aria-labelledby="soldModalLabel"
      aria-hidden="true">
@@ -105,84 +193,84 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="editModal{{el.id}}" tabindex="-1" aria-labelledby="editModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Изменить {{el.title}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex  py-3">
-                    <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}"
-                          name="edit"
-                          method="post">
-                        {% csrf_token %}
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">
-                            <div class="col">
-                                <label for="id_title">Имя</label>
-                                {{ edit_form.title }}
-                            </div>
-                            <div class="col">
-                                <label for="id_size">Размер</label>
-                                {{ edit_form.size }}
-                            </div>
-                            <div class="col">
-                                <label for="id_datebuy">Дата покупки</label>
-                                {{ edit_form.datebuy }}
-                            </div>
-                            <div class="col">
-                                <label for="id_datesell">Дата продажи</label>
+<!--<div class="modal fade" id="editModal{{el.id}}" tabindex="-1" aria-labelledby="editModalLabel"-->
+<!--     aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="editModalLabel">Изменить {{el.title}}</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+<!--                        aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="d-flex  py-3">-->
+<!--                    <form id="form_edit{{el.id}}" action="{% url 'item-edit' el.id %}"-->
+<!--                          name="edit"-->
+<!--                          method="post">-->
+<!--                        {% csrf_token %}-->
+<!--                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">-->
+<!--                            <div class="col">-->
+<!--                                <label for="id_title">Имя</label>-->
+<!--                                {{ edit_form.title }}-->
+<!--                            </div>-->
+<!--                            <div class="col">-->
+<!--                                <label for="id_size">Размер</label>-->
+<!--                                {{ edit_form.size }}-->
+<!--                            </div>-->
+<!--                            <div class="col">-->
+<!--                                <label for="id_datebuy">Дата покупки</label>-->
+<!--                                {{ edit_form.datebuy }}-->
+<!--                            </div>-->
+<!--                            <div class="col">-->
+<!--                                <label for="id_datesell">Дата продажи</label>-->
 
-                                {{ edit_form.datesell }}
-                            </div>
+<!--                                {{ edit_form.datesell }}-->
+<!--                            </div>-->
 
-                        </div>
-                        <br>
-                        <div class="row g-2">
-                            <div class="col-6 col-lg-4">
-                                <label for="id_currencyprice">Цена покупки</label>
-                                <div class="input-group">
-                                    {{ edit_form.currencyprice }}
-                                    <div class="input-group-text">{{ form.currencybuy }}</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-4">
-                                <label for="id_currencysellprice">Цена продажи</label>
-                                <div class="input-group">
-                                    {{ edit_form.currencysellprice }}
-                                    <div class="input-group-text">{{ form.currencysell }}</div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-4">
+<!--                        </div>-->
+<!--                        <br>-->
+<!--                        <div class="row g-2">-->
+<!--                            <div class="col-6 col-lg-4">-->
+<!--                                <label for="id_currencyprice">Цена покупки</label>-->
+<!--                                <div class="input-group">-->
+<!--                                    {{ edit_form.currencyprice }}-->
+<!--                                    <div class="input-group-text">{{ form.currencybuy }}</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-6 col-lg-4">-->
+<!--                                <label for="id_currencysellprice">Цена продажи</label>-->
+<!--                                <div class="input-group">-->
+<!--                                    {{ edit_form.currencysellprice }}-->
+<!--                                    <div class="input-group-text">{{ form.currencysell }}</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-12 col-lg-4">-->
 
-                                <label for="id_anyprice">Доп расходы</label>
-                                <div class="input-group" style="height: 45px">
-                                    <div class="input-group-text">₽</div>
-                                    {{ edit_form.anyprice }}
-                                </div>
-                            </div>
+<!--                                <label for="id_anyprice">Доп расходы</label>-->
+<!--                                <div class="input-group" style="height: 45px">-->
+<!--                                    <div class="input-group-text">₽</div>-->
+<!--                                    {{ edit_form.anyprice }}-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                            <div class="col">
-                                <label for="id_notes">Заметки</label>
-                                {{ edit_form.notes}}
-                            </div>
-                        </div>
+<!--                            <div class="col">-->
+<!--                                <label for="id_notes">Заметки</label>-->
+<!--                                {{ edit_form.notes}}-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" form="form_edit{{el.id}}" value="edit"
-                        class="btn btn-primary">
-                    Изменить
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="submit" form="form_edit{{el.id}}" value="edit"-->
+<!--                        class="btn btn-primary">-->
+<!--                    Изменить-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <div class="modal fade" id="createMeeting{{el.id}}" tabindex="-1"
      aria-labelledby="createMeetingLabel"
      aria-hidden="true">
@@ -417,7 +505,7 @@
 
                     <td>
                         <a class="btn btn-sm" data-bs-toggle="modal"
-                           data-bs-target="#editModal{{el.id}}" title="Edit">
+                           data-bs-target="#editModal{{forloop.counter}}" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
                                  class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>

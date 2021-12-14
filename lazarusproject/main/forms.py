@@ -1,6 +1,7 @@
 from .models import Table, US_SIZES, CURRENCY_CHOICES, Meetings
 from django import forms
-from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput, Textarea
+from django.forms import ModelForm, DateInput, NumberInput, Select, TextInput, PasswordInput, Textarea, \
+    modelformset_factory
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
@@ -115,6 +116,56 @@ class TableEditForm(ModelForm):
                 'rows': '1'
             }),
         }
+
+
+edit_form_set = modelformset_factory(Table, form=TableEditForm, fields=(
+"title", "size", "currencyprice", "currencybuy", "currencysell", "currencysellprice",
+"anyprice", "datebuy", "datesell", "notes"), widgets={
+    "title": TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Model Name',
+    }),
+    "size": Select(choices=US_SIZES, attrs={
+        'class': 'form-select',
+        'aria-label': '.form-select-lg example',
+        'placeholder': 'Model Size'
+    }),
+    "currencyprice": NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Model Price'
+    }),
+    "currencybuy": Select(choices=CURRENCY_CHOICES, attrs={
+        'class': 'form-select form-select-sm',
+        'placeholder': 'Model Currency'
+    }),
+    "currencysell": Select(choices=CURRENCY_CHOICES, attrs={
+        'class': 'form-select form-select-sm ',
+        'placeholder': 'Model Currency'
+    }),
+    "currencysellprice": NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Model Sell Price'
+    }),
+    "anyprice": NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Доп расходы'
+    }),
+    "datebuy": DateInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Дата покупки',
+        'type': 'date'
+    }),
+    "datesell": DateInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Дата продажи',
+        'type': 'date'
+    }),
+    "notes": Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Заметки',
+        'rows': '1'
+    }),
+}, extra=0)
 
 
 class TableSoldForm(ModelForm):
