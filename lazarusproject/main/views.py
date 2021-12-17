@@ -19,12 +19,78 @@ from .models import Table, Meetings, PotentialSellPrice
 
 from datetime import date
 
+
 class MainTemplateView(LoginRequiredMixin, TemplateView):
+    """
+    Отображает страницу инвентаря пользователя
+
+    **Загрузка контекста страницы**
+
+        ''form''
+            Форма для добавления предмета в инвентарь
+        ''edit_form''
+            Форма для редактирования предмета
+        ''sold_form''
+            Форма для записи данных если предмет был продан
+        ''meetings_form''
+            Форма для назначения встречи
+        ''add_item_to_meeting_form''
+            Форма для добавления предмета на встречу
+        ''year_value''
+            Прибыль за год
+        ''month_value''
+            Прибыль за месяц
+        ''week_value''
+            Прибыль за неделю
+        ''sum''
+            Прибыль за все время
+        ''table''
+            Предметы пользователя
+        ''meetings''
+            Существуют ли встречи у пользователя
+
+
+    **Шаблон:**
+
+    :template:`templates/main/index.html`
+
+    """
+
     login_url = reverse_lazy('login')
     template_name = 'main/index.html'
     model = Table
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        """
+         **Загрузка контекста страницы**
+
+        ''form''
+            Форма для добавления предмета в инвентарь
+        ''edit_form''
+            Форма для редактирования предмета
+        ''sold_form''
+            Форма для записи данных если предмет был продан
+        ''meetings_form''
+            Форма для назначения встречи
+        ''add_item_to_meeting_form''
+            Форма для добавления предмета на встречу
+        ''year_value''
+            Прибыль за год
+        ''month_value''
+            Прибыль за месяц
+        ''week_value''
+            Прибыль за неделю
+        ''sum''
+            Прибыль за все время
+        ''table''
+            Предметы пользователя
+        ''meetings''
+            Существуют ли встречи у пользователя
+
+        :param object_list:
+        :param kwargs:
+        :return:
+        """
         last_year = timezone.now().date() - timedelta(days=365)
         last_month = timezone.now().date() - timedelta(days=30)
         some_day_last_week = timezone.now().date() - timedelta(days=7)
@@ -75,6 +141,19 @@ class MainTemplateView(LoginRequiredMixin, TemplateView):
 
 
 class MeetingsListView(LoginRequiredMixin, ListView):
+    """
+    Отображает страницу встреч
+
+    **Загрузка контекста страницы**
+
+        ''table''
+             Встречи пользователя
+
+    **Шаблон:**
+
+    :template:`templates/main/meetings.html`
+
+    """
     login_url = reverse_lazy('login')
     template_name = 'main/meetings.html'
     model = Meetings
@@ -85,6 +164,11 @@ class MeetingsListView(LoginRequiredMixin, ListView):
 
 
 class ItemFormView(LoginRequiredMixin, FormView):
+
+    """
+    Добавление предмета в инвентарь
+    """
+
     login_url = reverse_lazy('login')
     template_name = 'main/index.html'
     success_url = reverse_lazy('inventory')
@@ -122,6 +206,10 @@ class ItemFormView(LoginRequiredMixin, FormView):
 
 
 class MeetingsFormView(LoginRequiredMixin, FormView):
+    """
+    Добавление встречи
+    """
+
     login_url = reverse_lazy('login')
     template_name = 'main/index.html'
     success_url = reverse_lazy('inventory')
@@ -154,6 +242,9 @@ class MeetingsFormView(LoginRequiredMixin, FormView):
 
 
 class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
+    """
+    Добавление предмета к встрече
+    """
     login_url = reverse_lazy('login')
     template_name = 'main/index.html'
     success_url = reverse_lazy('inventory')
@@ -189,6 +280,9 @@ class AddItemForMeetingFormView(LoginRequiredMixin, UpdateView):
 
 
 class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Удаление встречи при успешной продаже
+    """
     login_url = 'login'
     model = Meetings
     template_name = 'main/index.html'
@@ -212,6 +306,10 @@ class GoodMeetingDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class MeetingDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Удаление встречи
+    """
+
     login_url = 'login'
     model = Meetings
     template_name = 'main/index.html'
@@ -228,6 +326,9 @@ class MeetingDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Удаление предмета
+    """
     login_url = 'login'
     model = Table
     template_name = 'main/index.html'
@@ -243,6 +344,10 @@ class ItemDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Изменение предмета
+    """
+
     login_url = 'login'
     model = Table
     template_name = 'main/index.html'
@@ -280,6 +385,9 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class ItemSoldView(LoginRequiredMixin, UpdateView):
+    """
+    Редактирование предмета если он был продан
+    """
     login_url = 'login'
     model = Table
     template_name = 'main/index.html'
@@ -305,6 +413,10 @@ class ItemSoldView(LoginRequiredMixin, UpdateView):
 
 
 class UserLoginView(LoginView):
+    """
+    Отображение для входа пользователя в аккаунт
+    """
+
     redirect_authenticated_user = 'inventory'
     model = User
     template_name = 'main/login.html'
@@ -316,6 +428,9 @@ class UserLoginView(LoginView):
 
 
 class UserRegisterView(CreateView):
+    """
+    Отображение для регистрации нового аккаунта пользователя
+    """
     model = User
     template_name = 'main/sign-up.html'
     form_class = SignUpForm
@@ -331,6 +446,9 @@ class UserRegisterView(CreateView):
 
 
 class UserLogoutView(LogoutView):
+    """
+    Выход пользователя из аккаунта
+    """
     next_page = reverse_lazy('login')
 
 
@@ -340,6 +458,29 @@ class DeliveryView(LoginRequiredMixin, TemplateView):
 
 
 class StatisticView(LoginRequiredMixin, TemplateView):
+    """
+    Отображение статистики
+
+    **Загрузка контекста страницы**
+
+        ''week_dates''
+            Дни с прибылью за последнюю неделю
+        ''week_income''
+            Прибыль на каждый день из 'week_dates'
+        ''month_dates''
+            Дни с прибылью за последний месяц
+        ''month_income''
+            Прибыль на каждый день из 'month_dates'
+        ''year_dates''
+            Месяцы с прибылью за последний год
+        ''year_income''
+            Прибыль на каждый месяц из 'year_dates'
+        ''income''
+            Дни с прибылью за все время
+        ''dates''
+            Прибыль на каждый дни из 'income'
+
+    """
     login_url = 'login'
     template_name = 'main/statistic.html'
 
