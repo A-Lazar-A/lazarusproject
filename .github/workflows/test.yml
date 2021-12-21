@@ -37,4 +37,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python lazarusproject/manage.py test
+        python lazarusproject/manage.py test lazarusproject
+    - name: Run Coverage
+      run: |
+        coverage run lazarusproject/manage.py test lazarusproject && coverage report
+    
