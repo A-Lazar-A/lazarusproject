@@ -500,10 +500,6 @@ class StatisticView(LoginRequiredMixin, TemplateView):
         q_year = Table.objects.filter(datesell__gte=last_year, userID=self.request.user).order_by('datesell')
         q_month = Table.objects.filter(datesell__gte=last_month, userID=self.request.user).order_by('datesell')
         q_week = Table.objects.filter(datesell__gte=last_week, userID=self.request.user).order_by('datesell')
-        # purchases = Table.objects.filter(datebuy__isnull=False, userID=self.request.user).order_by('datebuy')
-        # purchases_year = Table.objects.filter(datebuy__gte=last_year, userID=self.request.user).order_by('datebuy')
-        # purchases_month = Table.objects.filter(datebuy__gte=last_month, userID=self.request.user).order_by('datebuy')
-        # purchases_week = Table.objects.filter(datebuy__gte=last_week, userID=self.request.user).order_by('datebuy')
         for i in q:
             if i.datesell.strftime('%d.%m.%Y') not in labels:
                 labels.append(i.datesell.strftime('%d.%m.%Y'))
