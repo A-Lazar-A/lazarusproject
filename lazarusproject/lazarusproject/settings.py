@@ -76,21 +76,22 @@ WSGI_APPLICATION = 'lazarusproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'test' in sys.argv:
+if os.environ.get('GITHUB_WORKFLOW'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'maindb',
-            'USER': 'maindbuser',
-            'PASSWORD': 'NkNl',
+            'NAME': 'github_actions',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
             'HOST': '127.0.0.1',
             'PORT': '5432',
             # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            # 'NAME': 'd5fl3qhksg8hrj',
-            # 'USER': 'eippdisrivafxw',
-            # 'PASSWORD': 'adf7769c4c4dcaf64203c294ac3810bf07aeef13b629d62578a7daf4db671a84',
-            # 'HOST': 'ec2-99-81-177-233.eu-west-1.compute.amazonaws.com',
+            # 'NAME': 'maindb',
+            # 'USER': 'maindbuser',
+            # 'PASSWORD': 'NkNl',
+            # 'HOST': '127.0.0.1',
             # 'PORT': '5432',
+
         }
     }
 else:
