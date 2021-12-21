@@ -200,7 +200,6 @@ class TestCreateViews(TestCase):
         self.assertEqual(response.status_code, 302)
         response = self.client.post(reverse('item-create'), self.item3)
         self.assertEqual(response.status_code, 302)
-        print(Table.objects.all()[0].id)
         response = self.client.post('/edit/9', self.item2)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Table.objects.get(id=9).currencyprice, 1200)
