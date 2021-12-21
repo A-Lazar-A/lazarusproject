@@ -22,6 +22,7 @@ jobs:
           POSTGRES_DB: maindb
           POSTGRES_USER: maindbuser
           POSTGRES_PASSWORD: NkNl
+          POSTGRES_HOST: localhost
         ports:
           - 5432:5432
         options: >-
